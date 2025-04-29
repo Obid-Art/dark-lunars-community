@@ -1,37 +1,88 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сообщество Dark Lunars | 龙</title>
-    <style>
-        body {
-            background-color: #0a0a0a;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: 'Arial', sans-serif;
-        }
-        .welcome-box {
-            background-color: #1a1a1a;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-            text-align: center;
-        }
-        .welcome-box h1 {
-            margin: 0;
-            font-size: 28px;
-            color: #00ffcc;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dark Lunars | 龙</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: url('https://obid-art.github.io/dark-lunars-community/images/bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      border-radius: 15px;
+      display: flex;
+      width: 90%;
+      max-width: 1200px;
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
+      animation: fadeIn 2s ease-in-out;
+    }
+    .left, .right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .left img {
+      width: 150px;
+      margin-bottom: 20px;
+    }
+    .left h1 {
+      font-size: 28px;
+      color: #00ffff;
+      text-align: center;
+    }
+    .right h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
+      color: #ffcc00;
+    }
+    .member {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 10px 20px;
+      border-radius: 10px;
+      margin-top: 10px;
+      width: 100%;
+      max-width: 300px;
+      text-align: center;
+      font-size: 18px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="welcome-box">
-        <h1>Добро пожаловать в Сообщество отряда Dark Lunars | 龙 в игре MLBB!</h1>
+  <div class="container">
+    <div class="left">
+      <img src="https://obid-art.github.io/dark-lunars-community/images/logo.png" alt="Dark Lunars Logo">
+      <h1>Dark Lunars | 龙</h1>
     </div>
+    <div class="right">
+      <h2>Участники отряда</h2>
+      <div class="member">Арт — Лидер</div>
+    </div>
+  </div>
 </body>
 </html>
