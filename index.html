@@ -27,6 +27,15 @@
       color: #00ffff;
       text-shadow: 0 0 10px black;
     }
+    .login-box {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+    }
+    .login-box input {
+      padding: 5px;
+      margin-right: 5px;
+    }
     .container {
       background-color: rgba(0, 0, 0, 0.7);
       padding: 30px;
@@ -70,6 +79,14 @@
       text-align: center;
       font-size: 18px;
     }
+    .admin-panel {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background-color: rgba(255,255,255,0.05);
+      border: 1px solid #00ffff;
+      border-radius: 10px;
+    }
     #giscus_container {
       width: 100%;
       max-width: 900px;
@@ -89,6 +106,13 @@
   <header>
     Добро пожаловать в сообщество Отряда <strong>Dark Lunars | 龙</strong> из игры MLBB
   </header>
+
+  <div class="login-box">
+    <input type="text" id="login" placeholder="Логин">
+    <input type="password" id="password" placeholder="Пароль">
+    <button onclick="login()">Войти</button>
+  </div>
+
   <div class="container">
     <div class="left">
       <img src="https://obid-art.github.io/dark-lunars-community/images/logo.png" alt="Dark Lunars Logo">
@@ -98,6 +122,11 @@
       <h2>Участники отряда</h2>
       <div class="member">Арт — Лидер</div>
     </div>
+  </div>
+
+  <div class="admin-panel" id="adminPanel">
+    <h2 style="color:#00ffff;">Управление отрядом</h2>
+    <p>Здесь появятся инструменты управления (в разработке).</p>
   </div>
 
   <div id="giscus_container"></div>
@@ -115,6 +144,25 @@
         data-lang="ru"
         crossorigin="anonymous"
         async>
+  </script>
+
+  <script>
+    function login() {
+      const user = document.getElementById('login').value;
+      const pass = document.getElementById('password').value;
+      if(user === 'Art' && pass === 'Redgard0_0') {
+        localStorage.setItem('isAdmin', 'true');
+        document.getElementById('adminPanel').style.display = 'block';
+        alert('Вход выполнен!');
+      } else {
+        alert('Неверный логин или пароль');
+      }
+    }
+    window.onload = function() {
+      if(localStorage.getItem('isAdmin') === 'true') {
+        document.getElementById('adminPanel').style.display = 'block';
+      }
+    }
   </script>
 </body>
 </html>
