@@ -17,8 +17,15 @@
       color: white;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
+    }
+    header {
+      padding: 30px 20px 10px;
+      text-align: center;
+      font-size: 22px;
+      color: #00ffff;
+      text-shadow: 0 0 10px black;
     }
     .container {
       background-color: rgba(0, 0, 0, 0.7);
@@ -29,6 +36,7 @@
       max-width: 1200px;
       box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
       animation: fadeIn 2s ease-in-out;
+      margin-bottom: 40px;
     }
     .left, .right {
       flex: 1;
@@ -62,6 +70,10 @@
       text-align: center;
       font-size: 18px;
     }
+    #giscus_container {
+      width: 100%;
+      max-width: 900px;
+    }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -74,6 +86,9 @@
   </style>
 </head>
 <body>
+  <header>
+    Добро пожаловать в сообщество Отряда <strong>Dark Lunars | 龙</strong> из игры MLBB
+  </header>
   <div class="container">
     <div class="left">
       <img src="https://obid-art.github.io/dark-lunars-community/images/logo.png" alt="Dark Lunars Logo">
@@ -84,5 +99,22 @@
       <div class="member">Арт — Лидер</div>
     </div>
   </div>
+
+  <div id="giscus_container"></div>
+  <script src="https://giscus.app/client.js"
+        data-repo="Obid-Art/dark-lunars-community"
+        data-repo-id="R_kgDOOhhWgw"
+        data-category="Обсуждение сайта"
+        data-category-id="DIC_kwDOOhhWg84Cpl8S"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="ru"
+        crossorigin="anonymous"
+        async>
+  </script>
 </body>
 </html>
