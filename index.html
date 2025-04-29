@@ -7,7 +7,7 @@
   <style>
     body {
       margin: 0;
-      background-color: #f3f3f3;
+      background-color: #101010;
       font-family: Arial, sans-serif;
       display: flex;
       align-items: center;
@@ -15,39 +15,46 @@
       height: 100vh;
     }
     .login-container {
-      background-color: white;
+      background-color: #1e1e1e;
       padding: 40px;
       border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
       text-align: center;
       width: 100%;
       max-width: 400px;
     }
     .login-container img {
-      width: 80px;
+      width: 100px;
       margin-bottom: 20px;
+      border-radius: 50%;
     }
     .login-container h2 {
       margin-bottom: 20px;
       font-size: 22px;
-      color: #333;
+      color: #00ffff;
     }
     .login-container input {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
       font-size: 16px;
+      background-color: #2c2c2c;
+      color: white;
+      border: none;
+      border-radius: 5px;
     }
     .login-container button {
       width: 100%;
       padding: 10px;
-      background-color: #ffd800;
+      background-color: #00bfff;
       border: none;
       font-size: 16px;
       cursor: pointer;
+      color: white;
+      border-radius: 5px;
     }
     .login-container button:hover {
-      background-color: #ffc800;
+      background-color: #009acd;
     }
     #mainSite {
       display: none;
@@ -112,7 +119,7 @@
 </head>
 <body>
   <div class="login-container" id="loginScreen">
-    <img src="https://cdn-icons-png.flaticon.com/512/5969/5969077.png" alt="1С style">
+    <img src="https://obid-art.github.io/dark-lunars-community/images/logo.png" alt="Dark Lunars Symbol">
     <h2>Вход в систему Dark Lunars</h2>
     <input type="text" id="login" placeholder="Логин">
     <input type="password" id="password" placeholder="Пароль">
