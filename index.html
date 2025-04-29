@@ -3,164 +3,156 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dark Lunars | 龙</title>
+  <title>Вход | Dark Lunars</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
     body {
-      background: url('https://obid-art.github.io/dark-lunars-community/images/bg.jpg') no-repeat center center fixed;
-      background-size: cover;
-      font-family: 'Segoe UI', sans-serif;
-      color: white;
-      min-height: 100vh;
+      margin: 0;
+      background-color: #f3f3f3;
+      font-family: Arial, sans-serif;
       display: flex;
-      flex-direction: column;
       align-items: center;
-    }
-    header {
-      padding: 30px 20px 10px;
-      text-align: center;
-      font-size: 22px;
-      color: #00ffff;
-      text-shadow: 0 0 10px black;
-    }
-    .login-box {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-    }
-    .login-box input {
-      padding: 5px;
-      margin-right: 5px;
-    }
-    .container {
-      background-color: rgba(0, 0, 0, 0.7);
-      padding: 30px;
-      border-radius: 15px;
-      display: flex;
-      width: 90%;
-      max-width: 1200px;
-      box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
-      animation: fadeIn 2s ease-in-out;
-      margin-bottom: 40px;
-    }
-    .left, .right {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
       justify-content: center;
-      align-items: center;
-      padding: 20px;
+      height: 100vh;
     }
-    .left img {
-      width: 150px;
+    .login-container {
+      background-color: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+    }
+    .login-container img {
+      width: 80px;
       margin-bottom: 20px;
     }
-    .left h1 {
+    .login-container h2 {
+      margin-bottom: 20px;
+      font-size: 22px;
+      color: #333;
+    }
+    .login-container input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    .login-container button {
+      width: 100%;
+      padding: 10px;
+      background-color: #ffd800;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .login-container button:hover {
+      background-color: #ffc800;
+    }
+    #mainSite {
+      display: none;
+      height: 100vh;
+      background: url('https://obid-art.github.io/dark-lunars-community/images/bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .layout {
+      display: flex;
+      height: 100%;
+    }
+    .sidebar {
+      width: 250px;
+      background: rgba(0,0,0,0.8);
+      padding: 20px;
+    }
+    .sidebar h3 {
+      font-size: 20px;
+      color: #00ffff;
+      margin-bottom: 20px;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar ul li {
+      margin: 15px 0;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .sidebar ul li.hidden {
+      display: none;
+    }
+    .content {
+      flex: 1;
+      padding: 30px;
+    }
+    .card {
+      background: rgba(0,0,0,0.6);
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .card img {
+      width: 150px;
+      display: block;
+      margin: 0 auto 20px;
+    }
+    .card h1 {
+      text-align: center;
       font-size: 28px;
       color: #00ffff;
+    }
+    .card p {
       text-align: center;
-    }
-    .right h2 {
-      font-size: 22px;
-      margin-bottom: 10px;
-      color: #ffcc00;
-    }
-    .member {
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 10px 20px;
-      border-radius: 10px;
-      margin-top: 10px;
-      width: 100%;
-      max-width: 300px;
-      text-align: center;
-      font-size: 18px;
-    }
-    .admin-panel {
-      display: none;
-      margin-top: 20px;
-      padding: 20px;
-      background-color: rgba(255,255,255,0.05);
-      border: 1px solid #00ffff;
-      border-radius: 10px;
-    }
-    #giscus_container {
-      width: 100%;
-      max-width: 900px;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
+      font-size: 16px;
     }
   </style>
 </head>
 <body>
-  <header>
-    Добро пожаловать в сообщество Отряда <strong>Dark Lunars | 龙</strong> из игры MLBB
-  </header>
-
-  <div class="login-box">
+  <div class="login-container" id="loginScreen">
+    <img src="https://cdn-icons-png.flaticon.com/512/5969/5969077.png" alt="1С style">
+    <h2>Вход в систему Dark Lunars</h2>
     <input type="text" id="login" placeholder="Логин">
     <input type="password" id="password" placeholder="Пароль">
-    <button onclick="login()">Войти</button>
+    <button onclick="checkLogin()">Войти</button>
   </div>
 
-  <div class="container">
-    <div class="left">
-      <img src="https://obid-art.github.io/dark-lunars-community/images/logo.png" alt="Dark Lunars Logo">
-      <h1>Dark Lunars | 龙</h1>
+  <div id="mainSite">
+    <div class="layout">
+      <div class="sidebar">
+        <h3>Меню</h3>
+        <ul>
+          <li>Мой отряд</li>
+          <li class="hidden">Заявки</li>
+          <li class="hidden">Задания отряда</li>
+          <li>Статистика отряда</li>
+          <li id="adminPanelLink" class="hidden">Управление отрядом</li>
+        </ul>
+      </div>
+      <div class="content">
+        <div class="card">
+          <img src="https://obid-art.github.io/dark-lunars-community/images/logo.png" alt="logo">
+          <h1>Dark Lunars™</h1>
+          <p>ID отряда: 6516088</p>
+          <p>Отряд ур. 10 — Узбекистан</p>
+        </div>
+      </div>
     </div>
-    <div class="right">
-      <h2>Участники отряда</h2>
-      <div class="member">Арт — Лидер</div>
-    </div>
   </div>
-
-  <div class="admin-panel" id="adminPanel">
-    <h2 style="color:#00ffff;">Управление отрядом</h2>
-    <p>Здесь появятся инструменты управления (в разработке).</p>
-  </div>
-
-  <div id="giscus_container"></div>
-  <script src="https://giscus.app/client.js"
-        data-repo="Obid-Art/dark-lunars-community"
-        data-repo-id="R_kgDOOhhWgw"
-        data-category="Обсуждение сайта"
-        data-category-id="DIC_kwDOOhhWg84Cpl8S"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="bottom"
-        data-theme="preferred_color_scheme"
-        data-lang="ru"
-        crossorigin="anonymous"
-        async>
-  </script>
 
   <script>
-    function login() {
-      const user = document.getElementById('login').value;
-      const pass = document.getElementById('password').value;
-      if(user === 'Art' && pass === 'Redgard0_0') {
-        localStorage.setItem('isAdmin', 'true');
-        document.getElementById('adminPanel').style.display = 'block';
-        alert('Вход выполнен!');
+    function checkLogin() {
+      const login = document.getElementById("login").value;
+      const password = document.getElementById("password").value;
+
+      if(login === "Art" && password === "Redgard0_0") {
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("mainSite").style.display = "block";
+        document.getElementById("adminPanelLink").classList.remove("hidden");
       } else {
-        alert('Неверный логин или пароль');
-      }
-    }
-    window.onload = function() {
-      if(localStorage.getItem('isAdmin') === 'true') {
-        document.getElementById('adminPanel').style.display = 'block';
+        alert("Неверный логин или пароль");
       }
     }
   </script>
