@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход | Dark Lunars</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: #0a0a0a;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+    }
+    .login-box {
+      background: #111;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #00ffff44;
+      text-align: center;
+    }
+    .login-box img {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+    .login-box h2 {
+      margin-bottom: 20px;
+      color: #00ffff;
+    }
+    .login-box input {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #222;
+      color: white;
+    }
+    .login-box button {
+      width: 100%;
+      padding: 10px;
+      background-color: #00bfff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .login-box button:hover {
+      background-color: #0090cc;
+    }
+    .login-box .register {
+      margin-top: 15px;
+      display: block;
+      color: #00ffff;
+      text-decoration: none;
+    }
+    .login-box .register:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <img src="https://obid-art.github.io/dark-lunars-community/images/logo.png" alt="Логотип">
+    <h2>Вход в систему Dark Lunars</h2>
+    <form action="dashboard.html" method="get">
+      <input type="text" placeholder="Логин" name="login" required>
+      <input type="password" placeholder="Пароль" name="password" required>
+      <button type="submit">Войти</button>
+      <a class="register" href="#">Зарегистрироваться</a>
+    </form>
+  </div>
+</body>
+</html>
