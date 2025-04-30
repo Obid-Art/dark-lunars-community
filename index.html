@@ -3,170 +3,136 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Вход | Dark Lunars</title>
+  <title>Dark Lunars | Добро пожаловать</title>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      margin: 0;
-      background-color: #101010;
       font-family: Arial, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    .login-container {
-      background-color: #1e1e1e;
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
-      text-align: center;
-      width: 100%;
-      max-width: 400px;
-    }
-    .login-container img {
-      width: 100px;
-      margin-bottom: 20px;
-      border-radius: 50%;
-    }
-    .login-container h2 {
-      margin-bottom: 20px;
-      font-size: 22px;
-      color: #00ffff;
-    }
-    .login-container input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 16px;
-      background-color: #2c2c2c;
-      color: white;
-      border: none;
-      border-radius: 5px;
-    }
-    .login-container button {
-      width: 100%;
-      padding: 10px;
-      background-color: #00bfff;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-      color: white;
-      border-radius: 5px;
-    }
-    .login-container button:hover {
-      background-color: #009acd;
-    }
-    #mainSite {
-      display: none;
-      height: 100vh;
-      background: url('https://obid-art.github.io/dark-lunars-community/images/bg.jpg') no-repeat center center fixed;
+      background: #0a0a0a url('https://obid-art.github.io/dark-lunars-community/images/bg.jpg') no-repeat center center fixed;
       background-size: cover;
       color: white;
-      font-family: 'Segoe UI', sans-serif;
     }
-    .layout {
+    header {
+      background: rgba(0, 0, 0, 0.9);
       display: flex;
-      height: 100%;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+      border-bottom: 2px solid #00ffff;
     }
-    .sidebar {
-      width: 250px;
-      background: rgba(0,0,0,0.8);
-      padding: 20px;
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-    }
-    .sidebar h3 {
-      font-size: 20px;
+    header .logo {
+      font-size: 24px;
       color: #00ffff;
-      margin-bottom: 20px;
+      font-weight: bold;
     }
-    .sidebar ul {
-      list-style: none;
-      padding: 0;
+    header .nav {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
     }
-    .sidebar ul li {
-      margin: 15px 0;
-      font-size: 16px;
-      cursor: pointer;
+    header .nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+      transition: 0.3s;
     }
-    .sidebar ul li.hidden {
-      display: none;
+    header .nav a:hover {
+      color: #00ffff;
     }
-    .content {
-      margin-left: auto;
-      margin-right: auto;
-      padding: 30px;
+    header .buttons a {
+      text-decoration: none;
+      margin-left: 20px;
+      padding: 8px 18px;
+      background: #00bfff;
+      color: white;
+      border-radius: 5px;
+      transition: 0.3s;
+    }
+    header .buttons a:hover {
+      background: #0088cc;
+    }
+    .main {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .main h1 {
+      font-size: 36px;
+      margin-bottom: 30px;
+      color: #00ffff;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
     }
     .card {
-      background: rgba(0,0,0,0.6);
-      padding: 30px;
+      background: rgba(0, 0, 0, 0.7);
       border-radius: 10px;
-      max-width: 800px;
-      margin: 0 auto;
+      overflow: hidden;
+      transition: 0.3s;
     }
     .card img {
-      width: 150px;
-      display: block;
-      margin: 0 auto 20px;
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
     }
-    .card h1 {
-      text-align: center;
-      font-size: 28px;
-      color: #00ffff;
+    .card h3 {
+      padding: 15px;
+      font-size: 18px;
     }
     .card p {
+      padding: 0 15px 15px;
+      font-size: 14px;
+      color: #ccc;
+    }
+    footer {
       text-align: center;
-      font-size: 16px;
+      padding: 20px;
+      font-size: 14px;
+      background: rgba(0, 0, 0, 0.8);
+      margin-top: 40px;
+      color: #888;
     }
   </style>
 </head>
 <body>
-  <div class="login-container" id="loginScreen">
-    <img src="https://obid-art.github.io/dark-lunars-community/images/logo.png" alt="Dark Lunars Symbol">
-    <h2>Вход в систему Dark Lunars</h2>
-    <input type="text" id="login" placeholder="Логин">
-    <input type="password" id="password" placeholder="Пароль">
-    <button onclick="checkLogin()">Войти</button>
-  </div>
+  <header>
+    <div class="logo">Dark Lunars™</div>
+    <div class="nav">
+      <a href="#stats">Статистика</a>
+      <a href="#members">Участники отряда</a>
+    </div>
+    <div class="buttons">
+      <a href="login.html">Войти</a>
+      <a href="#">Зарегистрироваться</a>
+    </div>
+  </header>
 
-  <div id="mainSite">
-    <div class="layout">
-      <div class="sidebar">
-        <h3>Меню</h3>
-        <ul>
-          <li>Мой отряд</li>
-          <li class="hidden">Заявки</li>
-          <li class="hidden">Задания отряда</li>
-          <li>Статистика отряда</li>
-          <li id="adminPanelLink" class="hidden">Управление отрядом</li>
-        </ul>
+  <div class="main">
+    <h1>Новости отряда</h1>
+    <div class="cards">
+      <div class="card">
+        <img src="https://cdn.wallpapersafari.com/81/18/OoxKp5.jpg" alt="Новость 1">
+        <h3>Dark Lunars достигли 10 уровня!</h3>
+        <p>Наш отряд сталь еще ближе к месту в топе лучших команд региона. Поздравляем участников!</p>
       </div>
-      <div class="content">
-        <div class="card">
-          <img src="https://obid-art.github.io/dark-lunars-community/images/logo.png" alt="logo">
-          <h1>Dark Lunars™</h1>
-          <p>ID отряда: 6516088</p>
-          <p>Отряд ур. 10 — Узбекистан</p>
-        </div>
+      <div class="card">
+        <img src="https://i.ytimg.com/vi/8E7zOV5BLWk/maxresdefault.jpg" alt="Новость 2">
+        <h3>Подготовка к турниру</h3>
+        <p>Скоро начнётся внутриигровой турнир. Убедитесь, что ваши герои готовы к бою!</p>
+      </div>
+      <div class="card">
+        <img src="https://img.redbull.com/images/c_crop,x_0,y_9,h_1121,w_1680/c_fill,w_1680,h_720/q_auto:low,f_auto/redbullcom/2022/3/2/k5ql4gfsc1khui8gux2a/mlbb"> 
+        <h3>Присоединяйся к Dark Lunars</h3>
+        <p>Хотите попасть в элитный состав? Оставьте заявку, и, возможно, именно вы станете частью легенды!</p>
       </div>
     </div>
   </div>
 
-  <script>
-    function checkLogin() {
-      const login = document.getElementById("login").value;
-      const password = document.getElementById("password").value;
-
-      if(login === "Art" && password === "Redgard0_0") {
-        document.getElementById("loginScreen").style.display = "none";
-        document.getElementById("mainSite").style.display = "block";
-        document.getElementById("adminPanelLink").classList.remove("hidden");
-      } else {
-        alert("Неверный логин или пароль");
-      }
-    }
-  </script>
+  <footer>
+    © 2025 Dark Lunars MLBB Community. Все права защищены.
+  </footer>
 </body>
 </html>
