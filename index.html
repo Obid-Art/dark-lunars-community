@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dark Lunars | Добро пожаловать</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
-      background: #0a0a0a url('https://obid-art.github.io/dark-lunars-community/images/bg.jpg') no-repeat center center fixed;
+      background: #0a0a0a url('images/bg.jpg') no-repeat center center fixed;
       background-size: cover;
       color: white;
     }
@@ -69,14 +69,20 @@
     }
     .card {
       background: rgba(0, 0, 0, 0.7);
-      border-radius: 10px;
+      border-radius: 12px;
       overflow: hidden;
-      transition: 0.3s;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 10px rgba(0,255,255,0.2);
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 15px rgba(0,255,255,0.5);
     }
     .card img {
       width: 100%;
       height: 180px;
       object-fit: cover;
+      border-bottom: 1px solid #00ffff;
     }
     .card h3 {
       padding: 15px;
@@ -116,15 +122,15 @@
       <div class="card">
         <img src="https://cdn.wallpapersafari.com/81/18/OoxKp5.jpg" alt="Новость 1">
         <h3>Dark Lunars достигли 10 уровня!</h3>
-        <p>Наш отряд сталь еще ближе к месту в топе лучших команд региона. Поздравляем участников!</p>
+        <p>Наш отряд стал ещё ближе к месту в топе лучших команд региона. Поздравляем участников!</p>
       </div>
       <div class="card">
-        <img src="https://i.ytimg.com/vi/8E7zOV5BLWk/maxresdefault.jpg" alt="Новость 2">
+        <img src="https://i.ytimg.com/vi/8E7zOV5BLWk/maxresdefault.jpg" alt="Турнир">
         <h3>Подготовка к турниру</h3>
         <p>Скоро начнётся внутриигровой турнир. Убедитесь, что ваши герои готовы к бою!</p>
       </div>
       <div class="card">
-        <img src="https://img.redbull.com/images/c_crop,x_0,y_9,h_1121,w_1680/c_fill,w_1680,h_720/q_auto:low,f_auto/redbullcom/2022/3/2/k5ql4gfsc1khui8gux2a/mlbb"> 
+        <img src="images/mcl.png" alt="Вступай в отряд">
         <h3>Присоединяйся к Dark Lunars</h3>
         <p>Хотите попасть в элитный состав? Оставьте заявку, и, возможно, именно вы станете частью легенды!</p>
       </div>
