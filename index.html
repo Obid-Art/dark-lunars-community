@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dark Lunars | Добро пожаловать</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -24,8 +24,6 @@
       font-size: 24px;
       color: #00ffff;
       font-weight: bold;
-      box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff inset;
-      transition: all 0.3s ease-in-out;
     }
     header .nav {
       flex-grow: 1;
@@ -50,12 +48,9 @@
       color: white;
       border-radius: 5px;
       transition: 0.3s;
-      box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff inset;
     }
     header .buttons a:hover {
       background: #0088cc;
-      box-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff inset;
-      transform: scale(1.05);
     }
     .main {
       max-width: 1200px;
@@ -74,19 +69,20 @@
     }
     .card {
       background: rgba(0, 0, 0, 0.7);
-      border-radius: 10px;
+      border-radius: 12px;
       overflow: hidden;
-      transition: 0.3s;
-      opacity: 0;
-      transform: translateY(30px);
-      animation: fadeInUp 1s forwards;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 10px rgba(0,255,255,0.2);
     }
-    .card:nth-child(2) { animation-delay: 0.3s; }
-    .card:nth-child(3) { animation-delay: 0.6s; }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 15px rgba(0,255,255,0.5);
+    }
     .card img {
       width: 100%;
       height: 180px;
       object-fit: cover;
+      border-bottom: 1px solid #00ffff;
     }
     .card h3 {
       padding: 15px;
@@ -96,12 +92,6 @@
       padding: 0 15px 15px;
       font-size: 14px;
       color: #ccc;
-    }
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
     }
     footer {
       text-align: center;
@@ -132,15 +122,15 @@
       <div class="card">
         <img src="https://cdn.wallpapersafari.com/81/18/OoxKp5.jpg" alt="Новость 1">
         <h3>Dark Lunars достигли 10 уровня!</h3>
-        <p>Наш отряд стал еще ближе к месту в топе лучших команд региона. Поздравляем участников!</p>
+        <p>Наш отряд стал ещё ближе к месту в топе лучших команд региона. Поздравляем участников!</p>
       </div>
       <div class="card">
-        <img src="https://i.ytimg.com/vi/8E7zOV5BLWk/maxresdefault.jpg" alt="Новость 2">
+        <img src="https://i.ytimg.com/vi/8E7zOV5BLWk/maxresdefault.jpg" alt="Турнир">
         <h3>Подготовка к турниру</h3>
         <p>Скоро начнётся внутриигровой турнир. Убедитесь, что ваши герои готовы к бою!</p>
       </div>
       <div class="card">
-        <img src="https://img.redbull.com/images/c_crop,x_0,y_9,h_1121,w_1680/c_fill,w_1680,h_720/q_auto:low,f_auto/redbullcom/2022/3/2/k5ql4gfsc1khui8gux2a/mlbb" alt="Новость 3">
+        <img src="images/mcl.png" alt="Вступай в отряд">
         <h3>Присоединяйся к Dark Lunars</h3>
         <p>Хотите попасть в элитный состав? Оставьте заявку, и, возможно, именно вы станете частью легенды!</p>
       </div>
@@ -150,21 +140,5 @@
   <footer>
     © 2025 Dark Lunars MLBB Community. Все права защищены.
   </footer>
-
-  <!-- Эффект снега -->
-  <canvas id="snow" style="position: fixed; top: 0; left: 0; z-index: -1; pointer-events: none;"></canvas>
-  <script src="js/snow.js"></script>
-
-  <!-- Звук при наведении -->
-  <audio id="hover-sound" src="sounds/hover.mp3" preload="auto"></audio>
-  <script>
-    const hoverSound = document.getElementById("hover-sound");
-    document.querySelectorAll('.buttons a').forEach(btn => {
-      btn.addEventListener("mouseenter", () => {
-        hoverSound.currentTime = 0;
-        hoverSound.play();
-      });
-    });
-  </script>
 </body>
 </html>
