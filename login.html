@@ -2,90 +2,96 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Вход в Dark Lunars</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вход в систему Dark Lunars</title>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      background-color: #0a0a0a;
-      color: #00ffff;
       font-family: Arial, sans-serif;
+      background: #0a0a0a;
+      color: white;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
     }
-    .login-container {
+    .login-box {
       background: #111;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px #00ffff66;
-      width: 100%;
-      max-width: 400px;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px #00ffff50;
       text-align: center;
+      width: 360px;
     }
-    .logo {
+    .login-box img {
       width: 100px;
       height: 100px;
-      margin: 0 auto 20px;
       border-radius: 50%;
-      overflow: hidden;
-      box-shadow: 0 0 10px #00ffff88;
+      margin-bottom: 20px;
+      box-shadow: 0 0 12px #00ffff80;
     }
-    .logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
-    }
-    h2 {
+    .login-box h2 {
+      color: #00ffff;
       margin-bottom: 20px;
     }
-    input[type="text"],
-    input[type="password"] {
-      width: 90%;
-      padding: 10px;
-      margin-bottom: 15px;
+    .login-box input[type="text"],
+    .login-box input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
       border: none;
       border-radius: 5px;
-      background: #fffdd0;
-      color: #000;
-      font-size: 16px;
-    }
-    .btn {
-      width: 95%;
-      padding: 10px;
-      background-color: #00bfff;
+      background: #222;
       color: white;
+    }
+    .login-box button {
+      width: 100%;
+      padding: 12px;
+      background: #00bfff;
       border: none;
+      color: white;
+      font-weight: bold;
       border-radius: 5px;
       cursor: pointer;
-      font-weight: bold;
-      margin-bottom: 10px;
+      transition: 0.3s;
     }
-    .btn:hover {
-      background-color: #0088cc;
+    .login-box button:hover {
+      background: #0088cc;
     }
-    a {
+    .login-box .register {
+      margin-top: 15px;
+      display: block;
       color: #00ffff;
       text-decoration: none;
-      display: block;
-      margin-top: 10px;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <div class="logo">
-      <img src="images/logo.png" alt="Dark Lunars Logo">
-    </div>
+  <div class="login-box">
+    <img src="images/logo.png" alt="Dark Lunars Logo">
     <h2>Вход в систему Dark Lunars</h2>
-    <form>
-      <input type="text" placeholder="Логин" value="Art"><br>
-      <input type="password" placeholder="Пароль" value="Redgard0_0"><br>
-      <button type="submit" class="btn">Войти</button>
-      <a href="#">Зарегистрироваться</a>
+    <form action="main.html" method="post" onsubmit="return validateLogin(event)">
+      <input type="text" placeholder="Логин" id="login">
+      <input type="password" placeholder="Пароль" id="password">
+      <button type="submit">Войти</button>
     </form>
+    <a class="register" href="#">Зарегистрироваться</a>
   </div>
+
+  <script>
+    function validateLogin(event) {
+      event.preventDefault();
+      const login = document.getElementById("login").value;
+      const password = document.getElementById("password").value;
+      if (login === "Art" && password === "Redgard0_0") {
+        window.location.href = "main.html";
+        return true;
+      } else {
+        alert("Неверный логин или пароль!");
+        return false;
+      }
+    }
+  </script>
 </body>
 </html>
