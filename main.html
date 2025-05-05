@@ -12,6 +12,15 @@
       background-size: cover;
       color: white;
     }
+    .logo {
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      font-size: 20px;
+      color: #00ffff;
+      font-weight: bold;
+      z-index: 1000;
+    }
     .sidebar {
       position: fixed;
       left: 0;
@@ -45,14 +54,6 @@
       background: rgba(0, 0, 0, 0.6);
       min-height: 100vh;
     }
-    .logo {
-      position: absolute;
-      top: 10px;
-      left: 20px;
-      font-size: 20px;
-      color: #00ffff;
-      font-weight: bold;
-    }
     .card-box {
       max-width: 400px;
       background: rgba(0, 0, 0, 0.8);
@@ -73,6 +74,43 @@
       font-size: 14px;
       color: #ccc;
     }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        padding: 10px;
+        box-shadow: none;
+      }
+      .sidebar ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+      }
+      .sidebar ul li {
+        flex: 1 1 45%;
+        text-align: center;
+        border: none;
+        margin: 5px;
+        padding: 10px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 8px;
+      }
+      .content {
+        margin-left: 0;
+        padding: 15px;
+      }
+      .logo {
+        position: static;
+        text-align: center;
+        margin: 10px 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -86,7 +124,6 @@
       <li>Управление отрядом</li>
     </ul>
   </div>
-
   <div class="content">
     <div class="card-box">
       <img src="https://obid-art.github.io/dark-lunars-community/images/logo-dragon.png" alt="Лого">
