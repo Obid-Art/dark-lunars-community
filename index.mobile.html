@@ -5,10 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dark Lunars | Mobile</title>
   <script>
-    // Редирект на ПК версию
-    if (window.innerWidth > 1024) {
+  function redirectBasedOnWidth() {
+    const isMobile = window.innerWidth <= 1024;
+    const currentPage = window.location.pathname;
+
+    if (isMobile && !currentPage.includes("index.mobile.html")) {
+      window.location.href = "index.mobile.html";
+    } else if (!isMobile && !currentPage.includes("index.html")) {
       window.location.href = "index.html";
     }
+  }
+  // Запустить сразу при загрузке
+  redirectBasedOnWidth();
+
+  // Обновить при изменении размера
+  window.addEventListener("resize", () => {
+    redirectBasedOnWidth();
+  });
   </script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
