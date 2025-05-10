@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Основные участники | Dark Lunars</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0a0a0a;
+      color: white;
+    }
+    header {
+      background: #000;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #00ffff;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #00ffff;
+    }
+    .nav a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .nav a:hover {
+      color: #00ffff;
+    }
+
+    .members-section {
+      padding: 40px 20px;
+      background: #0f0f0f;
+      text-align: center;
+    }
+    .members-section h2 {
+      color: #00ffff;
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+    .member-card {
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      background: #111;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+      margin: 20px auto;
+      max-width: 600px;
+      transition: transform 0.3s;
+    }
+    .member-card:hover {
+      transform: scale(1.02);
+    }
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 20px;
+      box-shadow: 0 0 10px #00ffff80;
+    }
+    .info h3 {
+      color: #00ffff;
+      margin-bottom: 10px;
+    }
+    .info p {
+      margin: 5px 0;
+      color: #ccc;
+    }
+    .rank-note {
+      color: #888;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Dark Lunars™</div>
+    <div class="nav">
+      <a href="index.html">Главная</a>
+    </div>
+  </header>
+
+  <section class="members-section">
+    <h2>Основные участники отряда</h2>
+
+    <div class="member-card">
+      <img src="images/kirigaya.jpg" alt="Аватар Kirigaya" class="avatar">
+      <div class="info">
+        <h3>Kirigaya</h3>
+        <p><strong>Роль:</strong> Стрелок</p>
+        <p><strong>Ранг:</strong> Мифический <span class="rank-note">(звёзды отсутствуют)</span></p>
+        <p><strong>Последний вход:</strong> 10 мая 2025</p>
+      </div>
+    </div>
+
+    <!-- Здесь будут добавляться другие участники -->
+  </section>
+</body>
+</html>
