@@ -22,6 +22,7 @@
       box-shadow: 0 0 20px #00ffff50;
       text-align: center;
       width: 360px;
+      position: relative;
     }
     .register-box h2 {
       color: #00ffff;
@@ -35,6 +36,22 @@
       border-radius: 5px;
       background: #222;
       color: white;
+    }
+    .password-wrapper {
+      position: relative;
+    }
+    .password-wrapper input {
+      width: 100%;
+      padding-right: 40px;
+    }
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 18px;
+      color: #fff;
     }
     .register-box button {
       width: 100%;
@@ -56,7 +73,10 @@
   <div class="register-box">
     <h2>Регистрация</h2>
     <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Пароль" />
+    <div class="password-wrapper">
+      <input type="password" id="password" placeholder="Пароль" />
+      <span class="toggle-password" onclick="togglePassword()">👁️</span>
+    </div>
     <button onclick="registerUser()">Зарегистрироваться</button>
   </div>
 
@@ -90,6 +110,11 @@
         .catch(error => {
           alert("Ошибка: " + error.message);
         });
+    }
+
+    function togglePassword() {
+      const input = document.getElementById("password");
+      input.type = input.type === "password" ? "text" : "password";
     }
   </script>
 </body>
