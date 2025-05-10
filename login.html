@@ -168,16 +168,26 @@
       input.type = input.type === "password" ? "text" : "password";
     }
 
-    function validateLogin() {
-      const login = document.getElementById("login").value;
-      const password = document.getElementById("password").value;
-      if (login === "Art" && password === "Redgard0_0") {
-        alert("Добро пожаловать, участник отряда!");
-        window.location.href = "main.html";
-      } else {
-        alert("Неверный логин или пароль участника отряда!");
-      }
+   <script>
+  function validateLogin() {
+    const login = document.getElementById("login").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    const users = {
+      "Art": { password: "Redgard0_0", nickname: "Art" },
+      "Kirigaya": { password: "Kirito", nickname: "Kirigaya" },
+      "Lukas": { password: "Loki", nickname: "L U C A S" },
+      "zombie": { password: "z0mb1e", nickname: "Z.O.M.B.I.E" },
+      "Barry": { password: "Barry123", nickname: "ORIF0090" }
+    };
+
+    if (users[login] && users[login].password === password) {
+      alert(`Добро пожаловать, ${users[login].nickname}, мы ждали вас.`);
+      window.location.href = "main.html";
+    } else {
+      alert("Неверный логин или пароль участника отряда!");
     }
-  </script>
+  }
+</script>
 </body>
 </html>
