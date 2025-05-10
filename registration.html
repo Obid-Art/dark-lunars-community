@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Регистрация | Dark Lunars</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0a0a0a;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .register-box {
+      background: #111;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #00ffff88;
+      width: 350px;
+    }
+    .register-box h2 {
+      text-align: center;
+      color: #00ffff;
+      margin-bottom: 25px;
+    }
+    .register-box input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+      background: #222;
+      color: white;
+    }
+    .register-box button {
+      width: 100%;
+      padding: 12px;
+      background: #00bfff;
+      border: none;
+      color: white;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .register-box button:hover {
+      background: #0088cc;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-box">
+    <h2>Регистрация</h2>
+    <form onsubmit="return registerUser(event)">
+      <input type="text" placeholder="Логин" id="reg-login" required>
+      <input type="password" placeholder="Пароль" id="reg-password" required>
+      <input type="email" placeholder="Email (необязательно)" id="reg-email">
+      <button type="submit">Зарегистрироваться</button>
+    </form>
+  </div>
+
+  <script>
+    function registerUser(event) {
+      event.preventDefault();
+      const login = document.getElementById("reg-login").value;
+      const password = document.getElementById("reg-password").value;
+
+      // Пока просто сохраняем в localStorage
+      localStorage.setItem("userLogin", login);
+      localStorage.setItem("userPassword", password);
+
+      alert("Регистрация прошла успешно!");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>
