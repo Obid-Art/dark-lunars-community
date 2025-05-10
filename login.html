@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Вход в систему Dark Lunars</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -15,27 +16,48 @@
       justify-content: center;
       align-items: center;
     }
-    .login-box {
+    .container {
       background: #111;
       padding: 40px;
       border-radius: 12px;
       box-shadow: 0 0 20px #00ffff50;
       text-align: center;
-      width: 360px;
+      width: 380px;
     }
-    .login-box img {
+    .container img {
       width: 100px;
       height: 100px;
       border-radius: 50%;
       margin-bottom: 20px;
       box-shadow: 0 0 12px #00ffff80;
     }
-    .login-box h2 {
+    h2 {
       color: #00ffff;
       margin-bottom: 20px;
     }
-    .login-box input[type="text"],
-    .login-box input[type="password"] {
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .tabs button {
+      padding: 10px 20px;
+      border: none;
+      background: #222;
+      color: white;
+      cursor: pointer;
+    }
+    .tabs button.active {
+      background: #00bfff;
+      font-weight: bold;
+    }
+    .form-section {
+      display: none;
+    }
+    .form-section.active {
+      display: block;
+    }
+    input[type="text"], input[type="password"], input[type="email"] {
       width: 100%;
       padding: 12px;
       margin-bottom: 20px;
@@ -44,7 +66,20 @@
       background: #222;
       color: white;
     }
-    .login-box button {
+    .password-wrapper {
+      position: relative;
+    }
+    .password-wrapper input {
+      padding-right: 40px;
+    }
+    .password-wrapper .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+    button {
       width: 100%;
       padding: 12px;
       background: #00bfff;
@@ -55,41 +90,92 @@
       cursor: pointer;
       transition: 0.3s;
     }
-    .login-box button:hover {
+    button:hover {
       background: #0088cc;
-    }
-    .login-box .register {
-      margin-top: 15px;
-      display: block;
-      color: #00ffff;
-      text-decoration: none;
-      font-size: 14px;
     }
   </style>
 </head>
 <body>
-  <div class="login-box">
+  <div class="container">
     <img src="images/logo.png" alt="Dark Lunars Logo">
     <h2>Вход в систему Dark Lunars</h2>
-    <form action="main.html" method="post" onsubmit="return validateLogin(event)">
+    <div class="tabs">
+      <button class="tab-button active" onclick="switchTab('squad')">Участник отряда</button>
+      <button class="tab-button" onclick="switchTab('firebase')">Гость (email)</button>
+    </div>
+
+    <!-- Участник отряда -->
+    <div class="form-section active" id="squad">
       <input type="text" placeholder="Логин" id="login">
-      <input type="password" placeholder="Пароль" id="password">
-      <button type="submit">Войти</button>
-    </form>
-    <a class="register" href="#">Зарегистрироваться</a>
+      <div class="password-wrapper">
+        <input type="password" placeholder="Пароль" id="password">
+        <span class="toggle-password" onclick="togglePassword('password')">👁️</span>
+      </div>
+      <button onclick="validateLogin()">Войти</button>
+    </div>
+
+    <!-- Firebase (гость) -->
+    <div class="form-section" id="firebase">
+      <input type="email" placeholder="Email" id="email">
+      <div class="password-wrapper">
+        <input type="password" placeholder="Пароль" id="firebase-password">
+        <span class="toggle-password" onclick="togglePassword('firebase-password')">👁️</span>
+      </div>
+      <button onclick="firebaseLogin()">Войти через Firebase</button>
+    </div>
   </div>
 
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA2V63cXu3yR9xClBDepOIINXA04-aCOEM",
+      authDomain: "darklunarsweb.firebaseapp.com",
+      projectId: "darklunarsweb",
+      storageBucket: "darklunarsweb.appspot.com",
+      messagingSenderId: "817766201322",
+      appId: "1:817766201322:web:64053b10492f72ebe22493"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.firebaseLogin = function() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("firebase-password").value;
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          alert("Успешный вход через Firebase!");
+          window.location.href = "main.html";
+        })
+        .catch((error) => {
+          alert("Ошибка входа: " + error.message);
+        });
+    }
+  </script>
+
   <script>
-    function validateLogin(event) {
-      event.preventDefault();
+    function switchTab(tab) {
+      document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+      document.getElementById(tab).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function togglePassword(id) {
+      const input = document.getElementById(id);
+      input.type = input.type === "password" ? "text" : "password";
+    }
+
+    function validateLogin() {
       const login = document.getElementById("login").value;
       const password = document.getElementById("password").value;
       if (login === "Art" && password === "Redgard0_0") {
+        alert("Добро пожаловать, участник отряда!");
         window.location.href = "main.html";
-        return true;
       } else {
-        alert("Неверный логин или пароль!");
-        return false;
+        alert("Неверный логин или пароль участника отряда!");
       }
     }
   </script>
