@@ -81,11 +81,23 @@
       gap: 10px;
       margin-top: 5px;
     }
+    .member-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #111;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+      margin: 20px auto;
+      max-width: 700px;
+      transition: transform 0.3s;
+    }
     .rank-icon {
       width: 64px;
       height: 64px;
-      vertical-align: middle;
-      margin: 0 8px;
+      object-fit: contain;
+      margin-left: 20px;
     }
     .rank-note {
       color: #888;
@@ -106,20 +118,18 @@
 
     <div class="member-card">
       <img src="images/kirigaya.jpg" alt="Аватар Kirigaya" class="avatar">
+      
       <div class="info">
         <h3>Kirigaya</h3>
-
-        <p>
-          <strong>Ранг:</strong>
-          <img src="images/rank-mythic.png" alt="Ранг Mythic" style="width: 64px; vertical-align: middle; margin: 0 8px;" />
-          <span class="rank-note">[ размещается ]</span>
-        </p>
-
+        <p><strong>Ранг:</strong> Мифический <span class="rank-note">[ размещается ]</span></p>
         <p><strong>Роль:</strong> Стрелок</p>
         <p><strong>Последний вход:</strong> 10 мая 2025</p>
       </div>
+    
+      <img src="images/rank-mythic.png" alt="Ранг" class="rank-icon">
     </div>
-
+  </div>
+  
     <!-- Здесь будут добавляться другие участники -->
   </section>
 </body>
