@@ -34,6 +34,19 @@
     .nav a:hover {
       color: #00ffff;
     }
+    .leader-card {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      justify-content: center;
+      align-items: center;
+      padding: 0 40px;
+    }
     .members-section {
       padding: 40px 20px;
       background: transparent;
@@ -104,33 +117,36 @@
 
   <section class="members-section">
     <h2>Основные участники отряда</h2>
-
-    <div class="member-card">
-      <img src="images/kirigaya.jpg" alt="Аватар Kirigaya" class="avatar">
       
-      <div class="info">
-        <h3>Kirigaya</h3>
-        <p><strong>Ранг:</strong> Мифический <span class="rank-note">[ размещается ]</span></p>
-        <p><strong>Роль:</strong> Стрелок</p>
-        <p><strong>Последний вход:</strong> 10 мая 2025</p>
+    <!-- ЛИДЕР -->
+    <div class="leader-card">
+      <div class="member-card">
+        <img src="images/art.jpg" alt="Аватар Art" class="avatar">
+        <div class="info">
+          <h3>Art</h3>
+          <p><strong>Ранг:</strong> Эпический <span class="rank-note">II</span></p>
+          <p><strong>Роль:</strong> Боец/Убийца</p>
+          <p><strong>Последний вход:</strong> 13 мая 2025</p>
+        </div>
+        <img src="images/rank-epic.png" alt="Ранг" class="rank-icon">
       </div>
-      
-      <img src="images/rank-mythic.png" alt="Ранг" class="rank-icon">
     </div>
-      
-    <div class="member-card">
-      <img src="images/art.jpg" alt="Аватар Art" class="avatar">
-       
-      <div class="info">
-        <h3>Art</h3>
-        <p><strong>Ранг:</strong> Эпический <span class="rank-note">II</span></p>
-        <p><strong>Роль:</strong> Боец/Убийца</p>
-        <p><strong>Последний вход:</strong> 13 мая 2025</p>
+           
+    <!-- ОСТАЛЬНЫЕ 4 -->
+    <div class="grid-container">
+      <!-- Участник 1 -->
+      <div class="member-card">
+        <img src="images/kirigaya.jpg" alt="Аватар Kirigaya" class="avatar">
+        <div class="info">
+          <h3>Kirigaya</h3>
+          <p><strong>Ранг:</strong> Мифический <span class="rank-note">[ размещается ]</span></p>
+          <p><strong>Роль:</strong> Стрелок</p>
+          <p><strong>Последний вход:</strong> 10 мая 2025</p>
+        </div>
+        <img src="images/rank-mythic.png" alt="Ранг" class="rank-icon">
       </div>
-       
-      <img src="images/rank-epic.png" alt="Ранг" class="rank-icon">
-    </div>
-
+                
+      <!-- Добавишь остальных 3 аналогично -->
     <!-- Здесь будут добавляться другие участники -->
   </section>
 </body>
