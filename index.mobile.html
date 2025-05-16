@@ -82,6 +82,14 @@
     font-weight: bold;
   }
 </style>
+<button id="chat-toggle">💬</button>
+<div id="chat-box">
+  <div id="chat-messages"></div>
+  <div id="chat-input">
+    <input type="text" id="chat-message" placeholder="Напишите сообщение...">
+    <button onclick="sendMessage()">Отпр</button>
+  </div>
+</div>
 <script>
   const toggle = document.getElementById('chat-toggle');
   const box = document.getElementById('chat-box');
@@ -226,10 +234,6 @@
   <header>
     <div class="logo">Dark Lunars™</div>
     </div>
-    <button id="chat-toggle">💬</button>
-    <div id="chat-box">
-      <div id="chat-messages"></div>
-      <div id="chat-input">
         <input type="text" id="chat-message" placeholder="Напишите сообщение...">
         <button onclick="sendMessage()">Отпр</button>
       </div>
@@ -241,7 +245,7 @@
     <a href="login.html">Войти</a>
     <a href="registration.html">Зарегистрироваться</a>
   </div>
-
+  <div class="chat-toggle">💬</div>
   <div class="top-links">
     <a href="#stats">Статистика</a>
     <a href="members.html">Участники отряда</a>
