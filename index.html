@@ -80,16 +80,6 @@
     font-weight: bold;
   }
 </style>
-
-<button id="chat-toggle">💬</button>
-<div id="chat-box">
-  <div id="chat-messages"></div>
-  <div id="chat-input">
-    <input type="text" id="chat-message" placeholder="Напишите сообщение...">
-    <button onclick="sendMessage()">Отпр</button>
-  </div>
-</div>
-
 <script>
   const toggle = document.getElementById('chat-toggle');
   const box = document.getElementById('chat-box');
@@ -232,6 +222,14 @@
     <div class="nav">
       <a href="#stats">Статистика</a>
       <a href="members.html">Участники отряда</a>
+    </div>
+    <button id="chat-toggle">💬</button>
+    <div id="chat-box">
+      <div id="chat-messages"></div>
+      <div id="chat-input">
+        <input type="text" id="chat-message" placeholder="Напишите сообщение...">
+        <button onclick="sendMessage()">Отпр</button>
+      </div>
     </div>
     <div class="buttons">
       <a href="login.html">Войти</a>
