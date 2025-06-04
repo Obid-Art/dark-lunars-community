@@ -80,51 +80,6 @@
     font-weight: bold;
   }
 </style>
-  <button id="chat-toggle">💬</button>
-  <div id="chat-box">
-    <div id="chat-messages"></div>
-    <div id="chat-input">
-      <input type="text" id="chat-message" placeholder="Напишите сообщение...">
-      <button onclick="sendMessage()">Отпр</button>
-    </div>
-  </div>
-<script>
-  const toggle = document.getElementById('chat-toggle');
-  const box = document.getElementById('chat-box');
-  const input = document.getElementById('chat-message');
-  const messages = document.getElementById('chat-messages');
-
-  toggle.addEventListener('click', () => {
-    box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
-  });
-
-  function sendMessage() {
-    const text = input.value.trim();
-    if (text !== '') {
-      const msg = document.createElement('div');
-      msg.textContent = `Вы: ${text}`;
-      messages.appendChild(msg);
-      input.value = '';
-      messages.scrollTop = messages.scrollHeight;
-      saveToLocal(text);
-    }
-  }
-  function saveToLocal(text) {
-    const chatLog = JSON.parse(localStorage.getItem('chat-log') || '[]');
-    chatLog.push(`Вы: ${text}`);
-    localStorage.setItem('chat-log', JSON.stringify(chatLog));
-  }
-  function loadChat() {
-    const chatLog = JSON.parse(localStorage.getItem('chat-log') || '[]');
-    for (const line of chatLog) {
-      const msg = document.createElement('div');
-      msg.textContent = line;
-      messages.appendChild(msg);
-    }
-    messages.scrollTop = messages.scrollHeight;
-  }
-  window.onload = loadChat;
-</script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -257,8 +212,52 @@
         <p>Хотите попасть в элитный состав? Оставьте заявку, и, возможно, именно вы станете частью легенды!</p>
       </div>
     </div>
+  </div> 
+  <script>
+    const toggle = document.getElementById('chat-toggle');
+    const box = document.getElementById('chat-box');
+    const input = document.getElementById('chat-message');
+    const messages = document.getElementById('chat-messages');
+      
+    toggle.addEventListener('click', () => {
+      box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
+    });
+      
+    function sendMessage() {
+      const text = input.value.trim();
+      if (text !== '') {
+        const msg = document.createElement('div');
+        msg.textContent = `Вы: ${text}`;
+        messages.appendChild(msg);
+        input.value = '';
+        messages.scrollTop = messages.scrollHeight;
+        saveToLocal(text);
+      }
+    }
+    function saveToLocal(text) {
+      const chatLog = JSON.parse(localStorage.getItem('chat-log') || '[]');
+      chatLog.push(`Вы: ${text}`);
+      localStorage.setItem('chat-log', JSON.stringify(chatLog));
+    }
+    function loadChat() {
+      const chatLog = JSON.parse(localStorage.getItem('chat-log') || '[]');
+      for (const line of chatLog) {
+        const msg = document.createElement('div');
+        msg.textContent = line;
+        messages.appendChild(msg);
+      }
+      messages.scrollTop = messages.scrollHeight;
+    }
+    window.onload = loadChat;
+  </script>
+  <button id="chat-toggle">💬</button>
+  <div id="chat-box">
+    <div id="chat-messages"></div>
+    <div id="chat-input">
+      <input type="text" id="chat-message" placeholder="Напишите сообщение...">
+      <button onclick="sendMessage()">Отпр</button>
+    </div>
   </div>
-
   <footer>
     © 2025 Dark Lunars MLBB Community. Все права защищены.
   </footer>
