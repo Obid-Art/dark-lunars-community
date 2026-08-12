@@ -1,265 +1,741 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dark Lunars | Добро пожаловать</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#05080d">
+  <meta name="description" content="Официальная страница MLBB-отряда Dark Lunars™: новости, статистика и состав команды.">
+  <title>Dark Lunars™ — MLBB Community</title>
+
+  <link rel="preload" href="images/mlbb_bg.jpg" as="image" fetchpriority="high">
+  <link rel="icon" href="images/logo.png" type="image/png">
+
   <script>
-  function redirectBasedOnWidth() {
-    const isMobile = window.innerWidth <= 768;
-    const currentPage = window.location.pathname;
-    if (isMobile && !currentPage.includes("index.mobile.html")) {
-      window.location.href = "index.mobile.html";
-    } else if (!isMobile && !currentPage.includes("index.html")) {
-      window.location.href = "index.html";
-    }
-  }
-  // Запустить сразу при загрузке
-  redirectBasedOnWidth();
-  // Обновить при изменении размера
-  window.addEventListener("resize", () => {
-    redirectBasedOnWidth();
-  });
+    (() => {
+      const mobileQuery = window.matchMedia('(max-width: 1024px)');
+      let redirectTimer;
+
+      function mobileUrl() {
+        const next = new URL('index.mobile.html', window.location.href);
+        next.search = window.location.search;
+        next.hash = window.location.hash;
+        return next.href;
+      }
+
+      function redirectToMobile() {
+        if (mobileQuery.matches) window.location.replace(mobileUrl());
+      }
+
+      redirectToMobile();
+      mobileQuery.addEventListener?.('change', () => {
+        window.clearTimeout(redirectTimer);
+        redirectTimer = window.setTimeout(redirectToMobile, 160);
+      });
+    })();
   </script>
-  <!-- ✅ ЧАТ КОМПОНЕНТ (добавляется на всех страницах) -->
-<style>
-  #chat-toggle {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #00ffff;
-    border: none;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-    color: black;
-    cursor: pointer;
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-    z-index: 9999;
-  }
-  #chat-box {
-    position: fixed;
-    bottom: 80px;
-    right: 20px;
-    width: 300px;
-    height: 400px;
-    background: #111;
-    color: white;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
-    display: none;
-    flex-direction: column;
-    z-index: 9998;
-  }
-  #chat-messages {
-    flex: 1;
-    padding: 10px;
-    overflow-y: auto;
-    font-size: 14px;
-  }
-  #chat-input {
-    display: flex;
-    border-top: 1px solid #444;
-  }
-  #chat-input input {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    outline: none;
-    background: #222;
-    color: white;
-    font-size: 14px;
-  }
-  #chat-input button {
-    background: #00ffff;
-    border: none;
-    padding: 0 15px;
-    cursor: pointer;
-    color: black;
-    font-weight: bold;
-  }
-</style>
+
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      color-scheme: dark;
+      --bg: #05080d;
+      --panel: rgba(5, 12, 19, 0.82);
+      --panel-solid: #081019;
+      --panel-soft: rgba(8, 18, 27, 0.66);
+      --text: #f5fbff;
+      --muted: #a8bac5;
+      --accent: #55f6ff;
+      --accent-2: #00a8ff;
+      --line: rgba(85, 246, 255, 0.24);
+      --danger: #ff657a;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.48);
+      --radius: 20px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: Arial, sans-serif;
-      background: #0a0a0a url('images/mlbb_bg.jpg') no-repeat center center fixed;
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      background: var(--bg) url('images/mlbb_bg.jpg') no-repeat center center fixed;
       background-size: cover;
-      color: white;
     }
-    header {
-      background: rgba(0, 0, 0, 0.9);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 40px;
-      border-bottom: 2px solid #00ffff;
-      flex-wrap: wrap;
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(2, 6, 10, 0.38), rgba(2, 6, 10, 0.78)),
+        radial-gradient(circle at 50% 14%, rgba(0, 174, 255, 0.16), transparent 38%);
     }
-    header .logo {
-      font-size: 24px;
-      color: #00ffff;
-      font-weight: bold;
-    }
-    header .nav {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-    header .nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-    header .nav a:hover {
-      color: #00ffff;
-    }
-    header .buttons a {
-      text-decoration: none;
-      margin-left: 20px;
-      padding: 8px 18px;
-      background: #00bfff;
-      color: white;
-      border-radius: 5px;
-      transition: 0.3s;
-    }
-    header .buttons a:hover {
-      background: #0088cc;
-    }
-    .main {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-    .main h1 {
-      font-size: 36px;
-      margin-bottom: 30px;
-      color: #00ffff;
-    }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-    .card {
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 12px;
+
+    button, input { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    img { display: block; max-width: 100%; }
+    [hidden] { display: none !important; }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
       overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 0 10px rgba(0,255,255,0.2);
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 0 15px rgba(0,255,255,0.5);
+
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid rgba(85, 246, 255, 0.72);
+      outline-offset: 3px;
     }
-    .card img {
-      width: 100%;
-      height: 180px;
+
+    .skip-link {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 10000;
+      padding: 10px 14px;
+      color: #001216;
+      font-weight: 800;
+      text-decoration: none;
+      background: var(--accent);
+      border-radius: 10px;
+      transform: translateY(-160%);
+    }
+    .skip-link:focus { transform: translateY(0); }
+
+    .snow {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+      opacity: 0.36;
+    }
+    .snow::before,
+    .snow::after {
+      content: "";
+      position: absolute;
+      inset: -100vh 0 0;
+      background-image:
+        radial-gradient(circle, rgba(225, 250, 255, 0.9) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(85, 246, 255, 0.55) 0 1px, transparent 1.5px);
+      background-position: 0 0, 24px 40px;
+      background-size: 70px 70px, 105px 105px;
+      animation: snow-fall 28s linear infinite;
+      will-change: transform;
+    }
+    .snow::after {
+      opacity: 0.45;
+      filter: blur(0.5px);
+      animation-duration: 42s;
+      animation-delay: -18s;
+      transform: translateX(30px);
+    }
+    @keyframes snow-fall { to { transform: translate3d(-32px, 100vh, 0); } }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--line);
+      background: rgba(3, 8, 13, 0.82);
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(18px);
+    }
+    .header-inner {
+      width: min(1240px, calc(100% - 48px));
+      min-height: 76px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 30px;
+      align-items: center;
+    }
+    .brand {
+      width: fit-content;
+      display: inline-flex;
+      gap: 12px;
+      align-items: center;
+      color: var(--text);
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      text-shadow: 0 0 18px rgba(85, 246, 255, 0.32);
+    }
+    .brand img {
+      width: 42px;
+      height: 42px;
       object-fit: cover;
-      border-bottom: 1px solid #00ffff;
+      border: 1px solid rgba(85, 246, 255, 0.58);
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(85, 246, 255, 0.24);
     }
-    .card h3 {
-      padding: 15px;
-      font-size: 18px;
+    .brand span { color: var(--accent); }
+
+    .main-nav { display: flex; gap: 8px; align-items: center; }
+    .nav-link,
+    .auth-link {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 15px;
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 750;
+      text-decoration: none;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      transition: color 180ms ease, border-color 180ms ease, background 180ms ease, transform 180ms ease;
     }
-    .card p {
-      padding: 0 15px 15px;
-      font-size: 14px;
-      color: #ccc;
+    .nav-link:hover {
+      color: var(--accent);
+      background: rgba(85, 246, 255, 0.07);
+      border-color: rgba(85, 246, 255, 0.16);
     }
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 14px;
-      background: rgba(0, 0, 0, 0.8);
-      margin-top: 40px;
-      color: #888;
+    .auth-area { position: relative; justify-self: end; }
+    .auth-links { display: flex; gap: 10px; align-items: center; }
+    .auth-link { border-color: rgba(85, 246, 255, 0.2); }
+    .auth-link--primary {
+      color: #001217;
+      background: linear-gradient(135deg, var(--accent), #0fb8ff);
+      border-color: transparent;
+      box-shadow: 0 0 22px rgba(85, 246, 255, 0.2);
+    }
+    .auth-link:hover { transform: translateY(-2px); border-color: rgba(85, 246, 255, 0.48); }
+
+    .user-button {
+      width: 46px;
+      height: 46px;
+      padding: 2px;
+      cursor: pointer;
+      color: var(--text);
+      background: rgba(85, 246, 255, 0.08);
+      border: 1px solid rgba(85, 246, 255, 0.46);
+      border-radius: 50%;
+      box-shadow: 0 0 18px rgba(85, 246, 255, 0.16);
+    }
+    .user-button img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+    .account-menu {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      width: 250px;
+      padding: 8px;
+      background: rgba(5, 13, 21, 0.97);
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      box-shadow: var(--shadow);
+    }
+    .account-name { padding: 10px 12px 12px; color: var(--muted); font-size: 0.82rem; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+    .account-menu a,
+    .account-menu button {
+      width: 100%;
+      min-height: 42px;
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      padding: 9px 12px;
+      cursor: pointer;
+      color: var(--text);
+      text-align: left;
+      text-decoration: none;
+      background: transparent;
+      border: 0;
+      border-radius: 9px;
+    }
+    .account-menu a:hover,
+    .account-menu button:hover { color: var(--accent); background: rgba(85, 246, 255, 0.08); }
+
+    main {
+      width: min(1180px, calc(100% - 48px));
+      margin: 0 auto;
+      flex: 1;
+    }
+    .hero {
+      min-height: 410px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(310px, 0.65fr);
+      gap: 56px;
+      align-items: center;
+      padding: 70px 0 52px;
+    }
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.19em;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      max-width: 760px;
+      margin: 0;
+      font-size: clamp(2.8rem, 6vw, 5.8rem);
+      line-height: 0.96;
+      letter-spacing: -0.045em;
+      text-shadow: 0 0 36px rgba(85, 246, 255, 0.22);
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero-copy { max-width: 650px; margin: 22px 0 0; color: #cfdae0; font-size: clamp(1rem, 1.4vw, 1.12rem); }
+
+    .stats-panel {
+      padding: 18px;
+      display: grid;
+      gap: 10px;
+      background: linear-gradient(145deg, rgba(11, 24, 35, 0.88), rgba(3, 9, 15, 0.82));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow), inset 0 1px rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(16px);
+    }
+    .stat {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 14px 16px;
+      background: rgba(85, 246, 255, 0.04);
+      border: 1px solid rgba(85, 246, 255, 0.1);
+      border-radius: 14px;
+    }
+    .stat dt { color: var(--muted); font-size: 0.83rem; font-weight: 700; }
+    .stat dd { margin: 0; color: var(--accent); font-size: 1.25rem; font-weight: 900; }
+
+    .news-section { padding: 36px 0 70px; scroll-margin-top: 100px; }
+    .section-heading { margin-bottom: 24px; display: flex; justify-content: space-between; gap: 20px; align-items: end; }
+    .section-heading h2 { margin: 0; font-size: clamp(1.8rem, 4vw, 2.6rem); letter-spacing: -0.03em; }
+    .section-heading p { max-width: 440px; margin: 0; color: var(--muted); text-align: right; }
+    .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+    .card {
+      min-width: 0;
+      overflow: hidden;
+      background: var(--panel);
+      border: 1px solid rgba(85, 246, 255, 0.15);
+      border-radius: var(--radius);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.32);
+      opacity: 0;
+      animation: card-in 600ms ease forwards;
+      transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+    }
+    .card:nth-child(2) { animation-delay: 80ms; }
+    .card:nth-child(3) { animation-delay: 160ms; }
+    @keyframes card-in { to { opacity: 1; } }
+    .card-media { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: #07101a; }
+    .card-media::after { content: ""; position: absolute; inset: auto 0 0; height: 55%; background: linear-gradient(transparent, rgba(2, 8, 13, 0.72)); pointer-events: none; }
+    .card img { width: 100%; height: 100%; object-fit: cover; transition: transform 500ms ease, filter 500ms ease; }
+    .card--logo img { object-fit: contain; padding: 18px; background: radial-gradient(circle, rgba(85, 246, 255, 0.12), transparent 62%); }
+    .card-body { padding: 20px 20px 22px; }
+    .card-tag { margin: 0 0 8px; color: var(--accent); font-size: 0.7rem; font-weight: 900; letter-spacing: 0.14em; text-transform: uppercase; }
+    .card h3 { margin: 0; font-size: 1.12rem; line-height: 1.35; }
+    .card p { margin: 10px 0 0; color: var(--muted); font-size: 0.9rem; }
+
+    .chat-toggle {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 300;
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      color: #001419;
+      background: linear-gradient(145deg, var(--accent), #0ab0ff);
+      border: 0;
+      border-radius: 50%;
+      box-shadow: 0 0 0 7px rgba(85, 246, 255, 0.08), 0 16px 42px rgba(0, 0, 0, 0.42), 0 0 28px rgba(85, 246, 255, 0.32);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+    .chat-toggle:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 0 0 9px rgba(85, 246, 255, 0.1), 0 20px 48px rgba(0, 0, 0, 0.48), 0 0 34px rgba(85, 246, 255, 0.42); }
+    .chat-toggle svg { width: 25px; height: 25px; fill: currentColor; }
+
+    .chat-panel {
+      position: fixed;
+      right: 24px;
+      bottom: 96px;
+      z-index: 310;
+      width: min(390px, calc(100vw - 32px));
+      height: min(560px, calc(100vh - 130px));
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      background: rgba(5, 13, 21, 0.98);
+      border: 1px solid rgba(85, 246, 255, 0.34);
+      border-radius: 20px;
+      box-shadow: var(--shadow), 0 0 35px rgba(85, 246, 255, 0.12);
+    }
+    .chat-header { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+    .chat-title { margin: 0; font-size: 1rem; }
+    .chat-status { margin: 2px 0 0; color: var(--muted); font-size: 0.72rem; }
+    .icon-button { width: 38px; height: 38px; display: grid; place-items: center; cursor: pointer; color: var(--text); background: transparent; border: 1px solid var(--line); border-radius: 10px; }
+    .icon-button:hover { color: var(--accent); background: rgba(85, 246, 255, 0.07); }
+    .chat-messages { min-height: 0; padding: 18px; overflow-y: auto; overscroll-behavior: contain; scrollbar-color: rgba(85, 246, 255, 0.45) transparent; }
+    .chat-empty { margin: 48px 22px; color: var(--muted); text-align: center; font-size: 0.88rem; }
+    .message { max-width: 86%; margin: 0 0 10px auto; padding: 10px 12px; background: linear-gradient(145deg, rgba(0, 168, 255, 0.25), rgba(85, 246, 255, 0.12)); border: 1px solid rgba(85, 246, 255, 0.2); border-radius: 14px 14px 4px 14px; overflow-wrap: anywhere; }
+    .message-meta { margin-bottom: 3px; color: var(--accent); font-size: 0.68rem; font-weight: 800; }
+    .message-text { font-size: 0.88rem; white-space: pre-wrap; }
+    .chat-form { padding: 12px; border-top: 1px solid var(--line); }
+    .chat-input-row { display: flex; gap: 8px; }
+    .chat-form input { min-width: 0; flex: 1; padding: 11px 12px; color: var(--text); background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(85, 246, 255, 0.18); border-radius: 11px; }
+    .chat-form input::placeholder { color: #788b96; }
+    .send-button { min-width: 82px; padding: 0 14px; cursor: pointer; color: #001419; font-weight: 900; background: var(--accent); border: 0; border-radius: 11px; }
+    .chat-note { margin: 8px 3px 0; display: flex; justify-content: space-between; gap: 10px; color: #71848f; font-size: 0.68rem; }
+
+    .site-footer { margin-top: auto; padding: 24px; color: #81939d; text-align: center; font-size: 0.82rem; background: rgba(2, 7, 11, 0.82); border-top: 1px solid rgba(85, 246, 255, 0.1); }
+
+    @media (hover: hover) {
+      .card:hover { transform: translateY(-7px); border-color: rgba(85, 246, 255, 0.42); box-shadow: 0 26px 62px rgba(0, 0, 0, 0.46), 0 0 28px rgba(85, 246, 255, 0.11); }
+      .card:hover img { transform: scale(1.045); filter: saturate(1.08); }
+    }
+    @media (max-width: 1120px) {
+      .header-inner { width: min(100% - 32px, 1240px); gap: 16px; }
+      .nav-link, .auth-link { padding-inline: 11px; font-size: 0.82rem; }
+      main { width: min(100% - 40px, 1180px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+      .snow { display: none; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">Dark Lunars™</div>
-    <div class="chat-mobile-btn">
-    <div class="nav">
-      <a href="#stats">Статистика</a>
-      <a href="members.html">Участники отряда</a>
-    </div>
-    </div>
-    <div class="buttons">
-      <a href="login.html">Войти</a>
-      <a href="registration.html">Зарегистрироваться</a>
+  <a class="skip-link" href="#main-content">Перейти к содержимому</a>
+  <div class="snow" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="Dark Lunars — главная" data-hover-sound>
+        <img src="images/logo.png" width="42" height="42" alt="" decoding="async">
+        <span>Dark Lunars™</span>
+      </a>
+
+      <nav class="main-nav" aria-label="Основная навигация">
+        <a class="nav-link" href="#stats" data-hover-sound>Статистика</a>
+        <a class="nav-link" href="members.html" data-hover-sound>Участники отряда</a>
+      </nav>
+
+      <div class="auth-area">
+        <div class="auth-links" id="auth-links">
+          <a class="auth-link" href="login.html" data-hover-sound>Войти</a>
+          <a class="auth-link auth-link--primary" href="registration.html" data-hover-sound>Зарегистрироваться</a>
+        </div>
+
+        <div id="user-control" hidden>
+          <button class="user-button" id="user-menu-toggle" type="button" aria-label="Открыть меню пользователя" aria-haspopup="menu" aria-expanded="false">
+            <img id="user-avatar" src="images/logo.png" width="42" height="42" alt="Аватар пользователя">
+          </button>
+          <div class="account-menu" id="account-menu" role="menu" hidden>
+            <div class="account-name" id="account-name">Пользователь</div>
+            <a href="HTML Files/profile.html" role="menuitem">Профиль</a>
+            <a href="login.html?switch=1" id="switch-account" role="menuitem">Войти в другой аккаунт</a>
+            <button type="button" id="logout-button" role="menuitem">Выйти</button>
+          </div>
+        </div>
+      </div>
     </div>
   </header>
-  <div class="main">
-    <h1>Новости отряда</h1>
-    <div class="cards">
-      <div class="card">
-        <img src="images/mcl.png" alt="Новость 1">
-        <h3>Dark Lunars достигли 10 уровня!</h3>
-        <p>Наш отряд стал ещё ближе к месту в топе лучших команд региона. Поздравляем участников!</p>
+
+  <main id="main-content">
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <p class="eyebrow">Mobile Legends: Bang Bang</p>
+        <h1 id="hero-title">Dark <span>Lunars™</span></h1>
+        <p class="hero-copy">Сообщество бойцов, которые растут вместе, держат строй и превращают каждую игру в шаг к вершине.</p>
       </div>
-      <div class="card">
-        <img src="images/hero-news.jpg" alt="Турнир">
-        <h3>Подготовка к турниру</h3>
-        <p>Скоро начнётся внутриигровой турнир. Убедитесь, что ваши герои готовы к бою!</p>
+
+      <dl class="stats-panel" id="stats">
+        <div class="stat"><dt>Уровень отряда</dt><dd>10</dd></div>
+        <div class="stat"><dt>Основной состав</dt><dd>5</dd></div>
+        <div class="stat"><dt>Лидер</dt><dd>Art</dd></div>
+      </dl>
+    </section>
+
+    <section class="news-section" aria-labelledby="news-title">
+      <div class="section-heading">
+        <h2 id="news-title">Новости отряда</h2>
+        <p>Главные события, подготовка команды и обновления сообщества Dark Lunars™.</p>
       </div>
-      <div class="card">
-        <img src="images/logo.png" alt="Вступай в отряд">
-        <h3>Присоединяйся к Dark Lunars</h3>
-        <p>Хотите попасть в элитный состав? Оставьте заявку, и, возможно, именно вы станете частью легенды!</p>
+
+      <div class="cards">
+        <article class="card" data-hover-sound>
+          <div class="card-media">
+            <img src="images/mcl.png" width="640" height="360" alt="Экран отряда Dark Lunars в Mobile Legends" loading="lazy" decoding="async">
+          </div>
+          <div class="card-body">
+            <p class="card-tag">Достижение</p>
+            <h3>Dark Lunars достигли 10 уровня!</h3>
+            <p>Наш отряд стал ещё ближе к месту в топе лучших команд региона. Поздравляем участников!</p>
+          </div>
+        </article>
+
+        <article class="card" data-hover-sound>
+          <div class="card-media">
+            <img src="images/hero-news.jpg" width="640" height="360" alt="Герои Mobile Legends перед турниром" loading="lazy" decoding="async">
+          </div>
+          <div class="card-body">
+            <p class="card-tag">Событие</p>
+            <h3>Подготовка к турниру</h3>
+            <p>Скоро начнётся внутриигровой турнир. Убедитесь, что ваши герои готовы к бою!</p>
+          </div>
+        </article>
+
+        <article class="card card--logo" data-hover-sound>
+          <div class="card-media">
+            <img src="images/logo.png" width="640" height="360" alt="Эмблема отряда Dark Lunars" loading="lazy" decoding="async">
+          </div>
+          <div class="card-body">
+            <p class="card-tag">Набор</p>
+            <h3>Присоединяйся к Dark Lunars</h3>
+            <p>Хотите попасть в основной состав? Познакомьтесь с отрядом и следите за открытием заявок.</p>
+          </div>
+        </article>
       </div>
+    </section>
+  </main>
+
+  <button class="chat-toggle" id="chat-toggle" type="button" aria-label="Открыть чат" aria-controls="chat-panel" aria-expanded="false" data-hover-sound>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h16a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H9l-5 3v-3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm2 6v2h12V9H6Zm0 4v2h8v-2H6Z"/></svg>
+  </button>
+
+  <aside class="chat-panel" id="chat-panel" role="dialog" aria-modal="false" aria-labelledby="chat-title" hidden>
+    <div class="chat-header">
+      <div>
+        <h2 class="chat-title" id="chat-title">Чат отряда</h2>
+        <p class="chat-status">Локальный режим · это устройство</p>
+      </div>
+      <button class="icon-button" id="chat-close" type="button" aria-label="Закрыть чат">✕</button>
     </div>
-  </div> 
+    <div class="chat-messages" id="chat-messages" aria-live="polite" aria-relevant="additions"></div>
+    <form class="chat-form" id="chat-form">
+      <label for="chat-message" class="visually-hidden">Сообщение</label>
+      <div class="chat-input-row">
+        <input id="chat-message" name="message" type="text" maxlength="500" autocomplete="off" placeholder="Напишите сообщение…" required>
+        <button class="send-button" type="submit">Отправить</button>
+      </div>
+      <div class="chat-note"><span>Общий онлайн-чат подключим через Firebase.</span><span id="chat-counter">0/500</span></div>
+    </form>
+  </aside>
+
+  <footer class="site-footer">© <span id="current-year">2026</span> Dark Lunars™ MLBB Community. Все права защищены.</footer>
+
+  <audio id="hover-audio" preload="none" src="sounds/hover.mp3"></audio>
+
   <script>
-    const toggle = document.getElementById('chat-toggle');
-    const box = document.getElementById('chat-box');
-    const input = document.getElementById('chat-message');
-    const messages = document.getElementById('chat-messages');
-      
-    toggle.addEventListener('click', () => {
-      box.style.display = box.style.display === 'flex' ? 'none' : 'flex';
-    });
-      
-    function sendMessage() {
-      const text = input.value.trim();
-      if (text !== '') {
-        const msg = document.createElement('div');
-        msg.textContent = `Вы: ${text}`;
-        messages.appendChild(msg);
-        input.value = '';
-        messages.scrollTop = messages.scrollHeight;
-        saveToLocal(text);
+    (() => {
+      'use strict';
+
+      const storageKey = 'dark-lunars-chat-v2';
+      const maxMessages = 50;
+      const authLinks = document.getElementById('auth-links');
+      const userControl = document.getElementById('user-control');
+      const userMenuToggle = document.getElementById('user-menu-toggle');
+      const accountMenu = document.getElementById('account-menu');
+      const accountName = document.getElementById('account-name');
+      const userAvatar = document.getElementById('user-avatar');
+      const chatToggle = document.getElementById('chat-toggle');
+      const chatPanel = document.getElementById('chat-panel');
+      const chatClose = document.getElementById('chat-close');
+      const chatForm = document.getElementById('chat-form');
+      const chatInput = document.getElementById('chat-message');
+      const chatCounter = document.getElementById('chat-counter');
+      const chatMessages = document.getElementById('chat-messages');
+
+      document.getElementById('current-year').textContent = String(new Date().getFullYear());
+
+      function setAccountMenu(open) {
+        accountMenu.hidden = !open;
+        userMenuToggle.setAttribute('aria-expanded', String(open));
       }
-    }
-    function saveToLocal(text) {
-      const chatLog = JSON.parse(localStorage.getItem('chat-log') || '[]');
-      chatLog.push(`Вы: ${text}`);
-      localStorage.setItem('chat-log', JSON.stringify(chatLog));
-    }
-    function loadChat() {
-      const chatLog = JSON.parse(localStorage.getItem('chat-log') || '[]');
-      for (const line of chatLog) {
-        const msg = document.createElement('div');
-        msg.textContent = line;
-        messages.appendChild(msg);
+
+      userMenuToggle.addEventListener('click', (event) => {
+        event.stopPropagation();
+        setAccountMenu(accountMenu.hidden);
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!userControl.contains(event.target)) setAccountMenu(false);
+      });
+
+      function setChat(open) {
+        chatPanel.hidden = !open;
+        chatToggle.setAttribute('aria-expanded', String(open));
+        chatToggle.setAttribute('aria-label', open ? 'Закрыть чат' : 'Открыть чат');
+        if (open) {
+          renderMessages();
+          window.setTimeout(() => chatInput.focus(), 0);
+        }
       }
-      messages.scrollTop = messages.scrollHeight;
-    }
-    window.onload = loadChat;
+
+      chatToggle.addEventListener('click', () => setChat(chatPanel.hidden));
+      chatClose.addEventListener('click', () => {
+        setChat(false);
+        chatToggle.focus();
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+        if (!accountMenu.hidden) setAccountMenu(false);
+        if (!chatPanel.hidden) setChat(false);
+      });
+
+      function readMessages() {
+        try {
+          const value = JSON.parse(localStorage.getItem(storageKey) || '[]');
+          if (!Array.isArray(value)) return [];
+          return value.filter((item) => item && typeof item.text === 'string').slice(-maxMessages);
+        } catch {
+          return [];
+        }
+      }
+
+      function formatTime(timestamp) {
+        try {
+          return new Intl.DateTimeFormat('ru-RU', { hour: '2-digit', minute: '2-digit' }).format(new Date(timestamp));
+        } catch {
+          return '';
+        }
+      }
+
+      function renderMessages() {
+        const messages = readMessages();
+        chatMessages.replaceChildren();
+
+        if (!messages.length) {
+          const empty = document.createElement('p');
+          empty.className = 'chat-empty';
+          empty.textContent = 'Здесь пока тихо. Начните разговор первым.';
+          chatMessages.append(empty);
+          return;
+        }
+
+        const fragment = document.createDocumentFragment();
+        messages.forEach((item) => {
+          const message = document.createElement('div');
+          message.className = 'message';
+          const meta = document.createElement('div');
+          meta.className = 'message-meta';
+          meta.textContent = `${item.author || 'Вы'} · ${formatTime(item.createdAt)}`;
+          const text = document.createElement('div');
+          text.className = 'message-text';
+          text.textContent = item.text;
+          message.append(meta, text);
+          fragment.append(message);
+        });
+        chatMessages.append(fragment);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+
+      chatInput.addEventListener('input', () => {
+        chatCounter.textContent = `${chatInput.value.length}/500`;
+      });
+
+      let lastSentAt = 0;
+      chatForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const text = chatInput.value.trim();
+        const now = Date.now();
+        if (!text || now - lastSentAt < 800) return;
+        lastSentAt = now;
+
+        const messages = readMessages();
+        messages.push({
+          id: `${now}-${Math.random().toString(16).slice(2)}`,
+          author: window.darkLunarsUserName || 'Вы',
+          text: text.slice(0, 500),
+          createdAt: now
+        });
+        localStorage.setItem(storageKey, JSON.stringify(messages.slice(-maxMessages)));
+        chatInput.value = '';
+        chatCounter.textContent = '0/500';
+        renderMessages();
+      });
+
+      window.addEventListener('storage', (event) => {
+        if (event.key === storageKey && !chatPanel.hidden) renderMessages();
+      });
+
+      window.DarkLunarsHome = {
+        showUser(user) {
+          if (!user) {
+            authLinks.hidden = false;
+            userControl.hidden = true;
+            window.darkLunarsUserName = '';
+            setAccountMenu(false);
+            return;
+          }
+          const displayName = user.displayName || user.email?.split('@')[0] || 'Пользователь';
+          authLinks.hidden = true;
+          userControl.hidden = false;
+          accountName.textContent = user.email || displayName;
+          userAvatar.src = user.photoURL || 'images/logo.png';
+          userAvatar.alt = `Аватар: ${displayName}`;
+          window.darkLunarsUserName = displayName;
+        }
+      };
+
+      const hoverAudio = document.getElementById('hover-audio');
+      const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      let soundUnlocked = false;
+      document.addEventListener('pointerdown', () => { soundUnlocked = true; }, { once: true });
+      document.addEventListener('keydown', () => { soundUnlocked = true; }, { once: true });
+      if (canHover) {
+        hoverAudio.volume = 0.12;
+        document.querySelectorAll('[data-hover-sound]').forEach((element) => {
+          element.addEventListener('pointerenter', () => {
+            if (!soundUnlocked) return;
+            hoverAudio.currentTime = 0;
+            hoverAudio.play().catch(() => {});
+          });
+        });
+      }
+    })();
   </script>
-  <button id="chat-toggle">💬</button>
-  <div id="chat-box">
-    <div id="chat-messages"></div>
-    <div id="chat-input">
-      <input type="text" id="chat-message" placeholder="Напишите сообщение...">
-      <button onclick="sendMessage()">Отпр</button>
-    </div>
-  </div>
-  <footer>
-    © 2025 Dark Lunars MLBB Community. Все права защищены.
-  </footer>
+
+  <script type="module">
+    import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+
+    const firebaseConfig = {
+      apiKey: 'AIzaSyA2V63cXu3yR9xClBDepOIINXA04-aCOEM',
+      authDomain: 'darklunarsweb.firebaseapp.com',
+      projectId: 'darklunarsweb',
+      storageBucket: 'darklunarsweb.appspot.com',
+      messagingSenderId: '817766201322',
+      appId: '1:817766201322:web:64053b10492f72ebe22493'
+    };
+
+    const app = getApps()[0] || initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    onAuthStateChanged(auth, (user) => window.DarkLunarsHome?.showUser(user));
+
+    document.getElementById('logout-button').addEventListener('click', async () => {
+      await signOut(auth).catch(() => {});
+      window.DarkLunarsHome?.showUser(null);
+    });
+
+    document.getElementById('switch-account').addEventListener('click', async (event) => {
+      event.preventDefault();
+      await signOut(auth).catch(() => {});
+      window.location.href = event.currentTarget.href;
+    });
+  </script>
 </body>
 </html>
