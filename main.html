@@ -1,137 +1,369 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dark Lunars | Панель управления</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#05080d">
+  <meta name="description" content="Защищённая панель управления отрядом Dark Lunars™.">
+  <title>Панель отряда — Dark Lunars™</title>
+  <link rel="preload" href="images/mlbb_bg.jpg" as="image" fetchpriority="high">
+  <link rel="icon" href="images/logo.png" type="image/png">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      color-scheme: dark;
+      --bg: #05080d;
+      --sidebar: rgba(3, 9, 14, .94);
+      --panel: rgba(5, 13, 21, .84);
+      --panel-solid: #07111a;
+      --text: #f5fbff;
+      --muted: #a8bac5;
+      --accent: #55f6ff;
+      --accent-2: #0aa8ff;
+      --line: rgba(85, 246, 255, .2);
+      --danger: #ff7185;
+      --success: #55edaa;
+      --warning: #ffc46b;
+      --shadow: 0 24px 70px rgba(0, 0, 0, .5);
+      --sidebar-width: 286px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { min-width: 320px; scroll-behavior: smooth; }
     body {
-      font-family: Arial, sans-serif;
-      background: url('https://obid-art.github.io/dark-lunars-community/images/bg.jpg') no-repeat center center fixed;
+      min-width: 320px;
+      min-height: 100svh;
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      background: var(--bg) url('images/mlbb_bg.jpg') no-repeat center center fixed;
       background-size: cover;
-      color: white;
     }
-    .logo {
-      position: absolute;
-      top: 10px;
-      left: 20px;
-      font-size: 20px;
-      color: #00ffff;
-      font-weight: bold;
-      z-index: 1000;
-    }
-    .sidebar {
-      position: fixed;
-      left: 0;
-      top: 0;
-      height: 100vh;
-      width: 260px;
-      background: rgba(0, 0, 0, 0.85);
-      padding-top: 60px;
-      box-shadow: 2px 0 10px rgba(0,0,0,0.7);
-    }
-    .sidebar ul {
-      list-style: none;
-    }
-    .sidebar ul li {
-      padding: 15px 25px;
-      font-size: 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      cursor: pointer;
-    }
-    .sidebar ul li:hover {
-      background: rgba(255,255,255,0.05);
-    }
-    .sidebar ul li.active {
-      background: #00bfff;
-      color: black;
-      font-weight: bold;
-    }
-    .content {
-      margin-left: 260px;
-      padding: 30px;
-      background: rgba(0, 0, 0, 0.6);
-      min-height: 100vh;
-    }
-    .card-box {
-      max-width: 400px;
-      background: rgba(0, 0, 0, 0.8);
-      padding: 20px;
-      border-radius: 15px;
-      text-align: center;
-      box-shadow: 0 0 15px rgba(0,255,255,0.3);
-    }
-    .card-box img {
-      width: 100px;
-      border-radius: 50%;
-      margin-bottom: 15px;
-    }
-    .card-box h2 {
-      color: #00ffff;
-    }
-    .card-box p {
-      font-size: 14px;
-      color: #ccc;
-    }
+    body::before { content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none; background: linear-gradient(90deg, rgba(2, 6, 10, .82), rgba(2, 6, 10, .52) 52%, rgba(2, 6, 10, .78)), radial-gradient(circle at 75% 15%, rgba(0, 174, 255, .16), transparent 38%); }
+    body::after { content: ""; position: fixed; inset: -100vh 0 0; z-index: -1; pointer-events: none; opacity: .18; background-image: radial-gradient(circle, rgba(225, 250, 255, .9) 0 1px, transparent 1.5px); background-size: 88px 88px; animation: snowfall 42s linear infinite; }
+    @keyframes snowfall { to { transform: translate3d(-32px, 100vh, 0); } }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; }
+    img { display: block; max-width: 100%; }
+    [hidden] { display: none !important; }
+    a:focus-visible, button:focus-visible { outline: 3px solid rgba(85, 246, 255, .72); outline-offset: 3px; }
+    .skip-link { position: fixed; top: 10px; left: 10px; z-index: 1000; padding: 9px 12px; color: #001216; font-weight: 850; text-decoration: none; background: var(--accent); border-radius: 9px; transform: translateY(-160%); }
+    .skip-link:focus { transform: translateY(0); }
 
-    @media (max-width: 768px) {
-      .sidebar {
-        position: relative;
-        width: 100%;
-        height: auto;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        padding: 10px;
-        box-shadow: none;
-      }
-      .sidebar ul {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        width: 100%;
-      }
-      .sidebar ul li {
-        flex: 1 1 45%;
-        text-align: center;
-        border: none;
-        margin: 5px;
-        padding: 10px;
-        background: rgba(255,255,255,0.05);
-        border-radius: 8px;
-      }
-      .content {
-        margin-left: 0;
-        padding: 15px;
-      }
-      .logo {
-        position: static;
-        text-align: center;
-        margin: 10px 0;
-      }
+    .access-state { min-height: 100svh; display: grid; place-items: center; padding: 24px; }
+    .access-card { width: min(520px, 100%); padding: clamp(28px, 6vw, 46px); text-align: center; background: rgba(5, 13, 21, .94); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); backdrop-filter: blur(18px); }
+    .access-logo { width: 84px; height: 84px; margin: 0 auto 20px; object-fit: cover; border: 2px solid rgba(85, 246, 255, .5); border-radius: 50%; box-shadow: 0 0 26px rgba(85, 246, 255, .2); }
+    .access-card h1 { margin: 0; font-size: clamp(1.8rem, 6vw, 2.7rem); letter-spacing: -.035em; }
+    .access-card p { margin: 12px auto 0; color: var(--muted); }
+    .spinner { width: 34px; height: 34px; margin: 24px auto 0; border: 3px solid rgba(85, 246, 255, .15); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .access-actions { margin-top: 24px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+    .action-link { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; padding: 10px 16px; color: #001217; font-weight: 900; text-decoration: none; background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-radius: 10px; }
+    .action-link--secondary { color: var(--text); background: rgba(85, 246, 255, .06); border: 1px solid var(--line); }
+
+    .dashboard { min-height: 100svh; display: grid; grid-template-columns: var(--sidebar-width) minmax(0, 1fr); }
+    .sidebar { position: sticky; top: 0; height: 100svh; display: flex; flex-direction: column; padding: 22px 16px max(20px, env(safe-area-inset-bottom)); background: var(--sidebar); border-right: 1px solid var(--line); box-shadow: 12px 0 40px rgba(0, 0, 0, .28); backdrop-filter: blur(18px); }
+    .brand { display: flex; align-items: center; gap: 11px; padding: 2px 8px 22px; color: var(--accent); font-weight: 900; letter-spacing: .035em; text-decoration: none; border-bottom: 1px solid rgba(85, 246, 255, .12); }
+    .brand img { width: 44px; height: 44px; object-fit: cover; border: 1px solid rgba(85, 246, 255, .52); border-radius: 50%; box-shadow: 0 0 18px rgba(85, 246, 255, .18); }
+    .nav-label { margin: 24px 10px 8px; color: #718995; font-size: .67rem; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
+    .side-nav { display: grid; gap: 5px; }
+    .nav-button, .nav-link { width: 100%; min-height: 46px; display: flex; align-items: center; gap: 11px; padding: 10px 12px; cursor: pointer; color: #c5d3da; font-size: .88rem; font-weight: 780; text-align: left; text-decoration: none; background: transparent; border: 1px solid transparent; border-radius: 10px; }
+    .nav-button::before, .nav-link::before { content: ""; width: 7px; height: 7px; flex: 0 0 auto; background: #58707c; border-radius: 50%; box-shadow: 0 0 0 4px rgba(88, 112, 124, .08); }
+    .nav-button:hover, .nav-link:hover { color: var(--text); background: rgba(85, 246, 255, .055); border-color: rgba(85, 246, 255, .1); }
+    .nav-button[aria-current="page"] { color: #001217; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 8px 24px rgba(0, 174, 255, .18); }
+    .nav-button[aria-current="page"]::before { background: #001217; box-shadow: none; }
+    .nav-button:disabled { cursor: not-allowed; color: #667b86; opacity: .62; }
+    .nav-button:disabled::after { content: "Скоро"; margin-left: auto; padding: 2px 6px; color: #8fa3ad; font-size: .61rem; background: rgba(255, 255, 255, .05); border-radius: 5px; }
+    .sidebar-account { margin-top: auto; padding: 13px; background: rgba(255, 255, 255, .035); border: 1px solid rgba(255, 255, 255, .06); border-radius: 12px; }
+    .account-name { margin: 0; overflow: hidden; font-size: .85rem; font-weight: 850; text-overflow: ellipsis; white-space: nowrap; }
+    .account-role { margin: 3px 0 12px; color: var(--muted); font-size: .74rem; }
+    .account-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .account-actions a, .account-actions button { min-height: 38px; display: grid; place-items: center; padding: 7px; cursor: pointer; color: var(--text); font-size: .72rem; font-weight: 800; text-decoration: none; background: rgba(85, 246, 255, .055); border: 1px solid rgba(85, 246, 255, .12); border-radius: 8px; }
+
+    .workspace { min-width: 0; }
+    .topbar { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 15px clamp(20px, 4vw, 54px); background: rgba(3, 9, 14, .72); border-bottom: 1px solid rgba(85, 246, 255, .12); backdrop-filter: blur(14px); }
+    .topbar-copy p { margin: 0; color: var(--muted); font-size: .76rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .topbar-copy h1 { margin: 3px 0 0; font-size: clamp(1.25rem, 3vw, 1.7rem); letter-spacing: -.025em; }
+    .status-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 11px; color: var(--success); font-size: .75rem; font-weight: 850; background: rgba(85, 237, 170, .07); border: 1px solid rgba(85, 237, 170, .2); border-radius: 999px; }
+    .status-badge::before { content: ""; width: 7px; height: 7px; background: var(--success); border-radius: 50%; box-shadow: 0 0 12px var(--success); }
+    .content { width: min(1320px, 100%); margin: 0 auto; padding: clamp(24px, 4vw, 54px); }
+    .content-section[hidden] { display: none; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+    .eyebrow { margin: 0 0 6px; color: var(--accent); font-size: .68rem; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
+    .section-head h2 { margin: 0; font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1; letter-spacing: -.05em; }
+    .section-head p:last-child { max-width: 510px; margin: 0; color: var(--muted); font-size: .9rem; }
+    .squad-grid { display: grid; grid-template-columns: minmax(280px, .86fr) minmax(360px, 1.14fr); gap: 22px; }
+    .squad-card, .panel, .stat-card { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); backdrop-filter: blur(14px); }
+    .squad-card { position: relative; min-height: 430px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 34px; overflow: hidden; text-align: center; }
+    .squad-card::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 20%, rgba(85, 246, 255, .14), transparent 44%); pointer-events: none; }
+    .squad-logo { position: relative; width: 126px; height: 126px; object-fit: cover; border: 2px solid rgba(85, 246, 255, .58); border-radius: 50%; box-shadow: 0 0 36px rgba(85, 246, 255, .23); }
+    .squad-card h3 { position: relative; margin: 22px 0 0; color: var(--accent); font-size: 2rem; letter-spacing: -.035em; }
+    .squad-id { position: relative; margin: 6px 0 0; color: var(--muted); font-size: .82rem; }
+    .squad-meta { position: relative; width: 100%; margin: 24px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .squad-meta div { padding: 12px; background: rgba(255, 255, 255, .035); border: 1px solid rgba(255, 255, 255, .06); border-radius: 10px; }
+    .squad-meta dt { color: #7f96a1; font-size: .66rem; font-weight: 850; text-transform: uppercase; }
+    .squad-meta dd { margin: 3px 0 0; font-size: .95rem; font-weight: 850; }
+    .motto { position: relative; margin: 22px 0 0; color: var(--accent); font-weight: 850; }
+    .panel { padding: 24px; }
+    .panel + .panel { margin-top: 16px; }
+    .panel-spaced { margin-top: 18px; }
+    .panel-title { margin: 0; font-size: 1.05rem; }
+    .panel-subtitle { margin: 5px 0 20px; color: var(--muted); font-size: .84rem; }
+    .quick-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .quick-link { min-height: 104px; display: flex; flex-direction: column; justify-content: flex-end; padding: 16px; color: var(--text); text-decoration: none; background: rgba(255, 255, 255, .035); border: 1px solid rgba(255, 255, 255, .06); border-radius: 12px; transition: border-color 160ms ease, transform 160ms ease, background 160ms ease; }
+    .quick-link:hover { border-color: rgba(85, 246, 255, .3); background: rgba(85, 246, 255, .055); transform: translateY(-2px); }
+    .quick-link span { color: var(--accent); font-size: .73rem; font-weight: 850; }
+    .quick-link strong { margin-top: 5px; font-size: .98rem; }
+    .notice { padding: 16px; color: #d6e1e5; font-size: .85rem; background: rgba(255, 196, 107, .06); border: 1px solid rgba(255, 196, 107, .18); border-radius: 12px; }
+    .notice strong { color: var(--warning); }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+    .stat-card { padding: 22px; }
+    .stat-card dt { color: var(--muted); font-size: .72rem; font-weight: 850; letter-spacing: .06em; text-transform: uppercase; }
+    .stat-card dd { margin: 8px 0 0; color: var(--accent); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900; line-height: 1; }
+    .manage-list { display: grid; gap: 10px; margin-top: 18px; }
+    .manage-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px; background: rgba(255, 255, 255, .035); border: 1px solid rgba(255, 255, 255, .06); border-radius: 12px; }
+    .manage-row strong { display: block; }
+    .manage-row span { color: var(--muted); font-size: .8rem; }
+    .tag { padding: 6px 9px; color: var(--accent); font-size: .69rem; font-weight: 850; background: rgba(85, 246, 255, .07); border: 1px solid rgba(85, 246, 255, .16); border-radius: 999px; }
+    @media (max-width: 1040px) {
+      :root { --sidebar-width: 245px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .squad-grid { grid-template-columns: 1fr; }
+      .squad-card { min-height: 390px; }
+    }
+    @media (max-width: 760px) {
+      .dashboard { display: block; }
+      .sidebar { position: sticky; z-index: 100; height: auto; padding: max(9px, env(safe-area-inset-top)) 12px 10px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .brand { padding: 0 4px 10px; }
+      .brand img { width: 36px; height: 36px; }
+      .nav-label, .sidebar-account { display: none; }
+      .side-nav { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+      .side-nav::-webkit-scrollbar { display: none; }
+      .nav-button, .nav-link { width: auto; min-width: max-content; min-height: 40px; padding: 8px 11px; font-size: .78rem; }
+      .nav-button::before, .nav-link::before, .nav-button:disabled::after { display: none; }
+      .topbar { min-height: 70px; padding: 12px 16px; }
+      .status-badge { padding: 7px 9px; font-size: .67rem; }
+      .content { padding: 28px 16px 38px; }
+      .section-head { align-items: flex-start; flex-direction: column; gap: 12px; }
+      .quick-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .squad-meta { grid-template-columns: 1fr; }
+      .topbar-copy p { display: none; }
+      .manage-row { align-items: flex-start; flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      body::after { display: none; }
     }
   </style>
 </head>
 <body>
-  <div class="logo">Dark Lunars™</div>
-  <div class="sidebar">
-    <ul>
-      <li class="active">Мой отряд</li>
-      <li class="disabled">Задания отряда</li>
-      <li class="disabled">Заявки</li>
-      <li>Статистика отряда</li>
-      <li>Управление отрядом</li>
-    </ul>
-  </div>
-  <div class="content">
-    <div class="card-box">
-      <img src="https://obid-art.github.io/dark-lunars-community/images/logo.png" alt="Лого">
-      <h2>Dark Lunars</h2>
-      <p>ID отряда: 6516088</p>
-      <p>Отряд ур. 10 — Узбекистан</p>
-      <p style="margin-top: 10px; color: #00ffff; font-weight: bold;">Сражаемся пока не победим сильнейших</p>
+  <a class="skip-link" href="#main-content">Перейти к содержимому</a>
+
+  <section class="access-state" id="access-state" aria-live="polite">
+    <div class="access-card">
+      <img class="access-logo" src="images/logo.png" width="84" height="84" alt="Эмблема Dark Lunars">
+      <h1 id="access-title">Проверяем доступ</h1>
+      <p id="access-message">Подтверждаем учётную запись и роль участника отряда.</p>
+      <div class="spinner" id="access-spinner" role="status" aria-label="Загрузка"></div>
+      <div class="access-actions" id="access-actions" hidden>
+        <a class="action-link" id="access-login" href="login.html?next=main.html">Войти</a>
+        <a class="action-link action-link--secondary" href="index.html">На главную</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="dashboard" id="dashboard" hidden>
+    <aside class="sidebar" aria-label="Панель отряда">
+      <a class="brand" href="index.html">
+        <img src="images/logo.png" width="44" height="44" alt="" decoding="async">
+        <span>Dark Lunars™</span>
+      </a>
+      <p class="nav-label">Навигация</p>
+      <nav class="side-nav" aria-label="Разделы панели">
+        <button class="nav-button" type="button" data-section="squad" aria-current="page">Мой отряд</button>
+        <button class="nav-button" type="button" disabled aria-disabled="true" title="Раздел пока отключён">Задания отряда</button>
+        <button class="nav-button" type="button" disabled aria-disabled="true" title="Раздел пока отключён">Заявки</button>
+        <button class="nav-button" type="button" data-section="statistics">Статистика</button>
+        <button class="nav-button" id="manage-nav" type="button" data-section="manage" hidden>Управление</button>
+        <a class="nav-link" href="members.html">Участники</a>
+      </nav>
+      <div class="sidebar-account">
+        <p class="account-name" id="sidebar-name">Пользователь</p>
+        <p class="account-role" id="sidebar-role">Участник отряда</p>
+        <div class="account-actions">
+          <a href="HTML Files/profile.html">Профиль</a>
+          <button id="logout-button" type="button">Выйти</button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <div class="topbar-copy">
+          <p>Панель управления отрядом</p>
+          <h1 id="welcome-title">Добро пожаловать</h1>
+        </div>
+        <span class="status-badge">Сессия защищена</span>
+      </header>
+
+      <main class="content" id="main-content">
+        <section class="content-section" id="section-squad" data-section-panel="squad">
+          <header class="section-head">
+            <div><p class="eyebrow">Основная информация</p><h2>Мой отряд</h2></div>
+            <p>Главная сводка Dark Lunars™, быстрые переходы и текущее состояние функций отряда.</p>
+          </header>
+          <div class="squad-grid">
+            <article class="squad-card">
+              <img class="squad-logo" src="images/logo.png" width="126" height="126" alt="Эмблема отряда Dark Lunars">
+              <h3>Dark Lunars™</h3>
+              <p class="squad-id">ID отряда: 6516088</p>
+              <dl class="squad-meta">
+                <div><dt>Уровень</dt><dd>10</dd></div>
+                <div><dt>Регион</dt><dd>Узбекистан</dd></div>
+                <div><dt>Лидер</dt><dd>Art</dd></div>
+                <div><dt>Основной состав</dt><dd>5</dd></div>
+              </dl>
+              <p class="motto">Сражаемся, пока не победим сильнейших.</p>
+            </article>
+
+            <div>
+              <section class="panel" aria-labelledby="quick-title">
+                <h3 class="panel-title" id="quick-title">Быстрый доступ</h3>
+                <p class="panel-subtitle">Переходите к главным разделам сообщества.</p>
+                <div class="quick-grid">
+                  <a class="quick-link" href="members.html"><span>Состав</span><strong>Участники отряда</strong></a>
+                  <a class="quick-link" href="HTML Files/profile.html"><span>Аккаунт</span><strong>Мой профиль</strong></a>
+                  <a class="quick-link" href="index.html#stats"><span>Публичная страница</span><strong>Статистика сайта</strong></a>
+                  <a class="quick-link" href="index.html"><span>Сообщество</span><strong>Новости Dark Lunars</strong></a>
+                </div>
+              </section>
+              <section class="panel" aria-labelledby="notice-title">
+                <h3 class="panel-title" id="notice-title">Состояние функций</h3>
+                <p class="panel-subtitle">Панель честно показывает, какие возможности ещё не подключены.</p>
+                <div class="notice"><strong>Задания и заявки отключены.</strong> Они не выполняют скрытых действий и станут доступны только после отдельной настройки.</div>
+              </section>
+            </div>
+          </div>
+        </section>
+
+        <section class="content-section" id="section-statistics" data-section-panel="statistics" hidden>
+          <header class="section-head">
+            <div><p class="eyebrow">Сводка</p><h2>Статистика отряда</h2></div>
+            <p>Публичные показатели состава. Боевые результаты будут подключены отдельно после появления источника данных.</p>
+          </header>
+          <dl class="stats-grid">
+            <div class="stat-card"><dt>Уровень отряда</dt><dd>10</dd></div>
+            <div class="stat-card"><dt>Основных игроков</dt><dd>5</dd></div>
+            <div class="stat-card"><dt>Регион</dt><dd>UZ</dd></div>
+            <div class="stat-card"><dt>Панель</dt><dd>LIVE</dd></div>
+          </dl>
+          <section class="panel panel-spaced">
+            <h3 class="panel-title">Что появится дальше</h3>
+            <p class="panel-subtitle">История матчей, общий процент побед и активность участников требуют надёжного источника данных, поэтому значения не выдумываются.</p>
+          </section>
+        </section>
+
+        <section class="content-section" id="section-manage" data-section-panel="manage" hidden>
+          <header class="section-head">
+            <div><p class="eyebrow">Только лидер</p><h2>Управление отрядом</h2></div>
+            <p>Раздел отображается только аккаунту с защищённой ролью <code>leader</code> в Firebase.</p>
+          </header>
+          <section class="panel">
+            <h3 class="panel-title">Доступные настройки</h3>
+            <p class="panel-subtitle">Пока это безопасная обзорная панель без необратимых действий.</p>
+            <div class="manage-list">
+              <div class="manage-row"><div><strong>Профили участников</strong><span>Единая структура данных и ролей</span></div><span class="tag">Подготовлено</span></div>
+              <div class="manage-row"><div><strong>Задания отряда</strong><span>Раздел остаётся отключённым для всех</span></div><span class="tag">Отключено</span></div>
+              <div class="manage-row"><div><strong>Заявки</strong><span>Раздел остаётся отключённым для всех</span></div><span class="tag">Отключено</span></div>
+            </div>
+          </section>
+        </section>
+      </main>
     </div>
   </div>
+
+  <script type="module">
+    import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+    import { getAuth, getIdTokenResult, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+
+    const firebaseConfig = {
+      apiKey: 'AIzaSyA2V63cXu3yR9xClBDepOIINXA04-aCOEM',
+      authDomain: 'darklunarsweb.firebaseapp.com',
+      projectId: 'darklunarsweb',
+      storageBucket: 'darklunarsweb.appspot.com',
+      messagingSenderId: '817766201322',
+      appId: '1:817766201322:web:64053b10492f72ebe22493'
+    };
+
+    const app = getApps()[0] || initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const accessState = document.getElementById('access-state');
+    const accessTitle = document.getElementById('access-title');
+    const accessMessage = document.getElementById('access-message');
+    const accessSpinner = document.getElementById('access-spinner');
+    const accessActions = document.getElementById('access-actions');
+    const dashboard = document.getElementById('dashboard');
+
+    function showBlocked(title, message) {
+      accessTitle.textContent = title;
+      accessMessage.textContent = message;
+      accessSpinner.hidden = true;
+      accessActions.hidden = false;
+      dashboard.hidden = true;
+      accessState.hidden = false;
+    }
+
+    function showDashboard(user, role, nickname) {
+      const displayName = nickname || user.displayName || user.email?.split('@')[0] || 'Участник';
+      document.getElementById('welcome-title').textContent = `Добро пожаловать, ${displayName}`;
+      document.getElementById('sidebar-name').textContent = displayName;
+      document.getElementById('sidebar-role').textContent = role === 'leader' ? 'Лидер отряда' : 'Участник отряда';
+      document.getElementById('manage-nav').hidden = role !== 'leader';
+      accessState.hidden = true;
+      dashboard.hidden = false;
+    }
+
+    function activateSection(name) {
+      document.querySelectorAll('[data-section-panel]').forEach((panel) => { panel.hidden = panel.dataset.sectionPanel !== name; });
+      document.querySelectorAll('[data-section]').forEach((button) => {
+        if (button.dataset.section === name) button.setAttribute('aria-current', 'page');
+        else button.removeAttribute('aria-current');
+      });
+      document.getElementById(`section-${name}`)?.focus({ preventScroll: true });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.querySelectorAll('[data-section]').forEach((button) => {
+      button.addEventListener('click', () => activateSection(button.dataset.section));
+    });
+
+    document.getElementById('logout-button').addEventListener('click', async () => {
+      await signOut(auth).catch(() => {});
+      window.location.replace('index.html');
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        showBlocked('Требуется вход', 'Панель доступна только подтверждённым участникам отряда Dark Lunars™.');
+        return;
+      }
+      try {
+        const token = await getIdTokenResult(user, true);
+        const role = typeof token.claims.squadRole === 'string' ? token.claims.squadRole : '';
+        if (!['leader', 'member'].includes(role)) {
+          showBlocked('Нет роли участника', 'Аккаунт вошёл успешно, но ему ещё не назначена защищённая роль отряда. Обратитесь к лидеру Dark Lunars™.');
+          return;
+        }
+        const nickname = typeof token.claims.squadNickname === 'string' ? token.claims.squadNickname : '';
+        showDashboard(user, role, nickname);
+      } catch {
+        showBlocked('Не удалось проверить роль', 'Обновите страницу. Если ошибка повторится, проверьте соединение с Firebase.');
+      }
+    });
+  </script>
 </body>
 </html>
