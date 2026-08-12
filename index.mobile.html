@@ -190,6 +190,19 @@
     .header-button:active { transform: scale(0.96); }
     .header-button svg { width: 22px; height: 22px; fill: currentColor; }
     .header-button img { width: 100%; height: 100%; padding: 2px; object-fit: cover; border-radius: 11px; }
+    .header-button--account { overflow: hidden; }
+    .header-button--account #guest-icon,
+    .header-button--account #user-avatar { grid-area: 1 / 1; }
+    .header-button--account #user-avatar {
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      border-radius: 10px;
+    }
+    .header-button--account[data-account-state="guest"] #user-avatar,
+    .header-button--account[data-account-state="user"] #guest-icon {
+      display: none !important;
+    }
 
     .account-area { position: relative; }
     .account-menu {
@@ -371,7 +384,7 @@
       </button>
 
       <div class="account-area" id="account-area">
-        <button class="header-button" id="account-toggle" type="button" aria-label="Открыть меню пользователя" aria-haspopup="menu" aria-expanded="false">
+        <button class="header-button header-button--account" id="account-toggle" type="button" data-account-state="guest" aria-label="Открыть меню входа" aria-haspopup="menu" aria-expanded="false">
           <svg id="guest-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-5.52 0-10 2.69-10 6v2h20v-2c0-3.31-4.48-6-10-6Z"/></svg>
           <img id="user-avatar" src="images/logo.png" width="40" height="40" alt="Аватар пользователя" hidden>
         </button>
@@ -619,6 +632,8 @@
       window.DarkLunarsHome = {
         showUser(user) {
           if (!user) {
+            accountToggle.dataset.accountState = 'guest';
+            accountToggle.setAttribute('aria-label', 'Открыть меню входа');
             guestMenu.hidden = false;
             userMenu.hidden = true;
             guestIcon.hidden = false;
@@ -628,16 +643,27 @@
             return;
           }
           const displayName = user.displayName || user.email?.split('@')[0] || 'Пользователь';
+          accountToggle.dataset.accountState = 'user';
+          accountToggle.setAttribute('aria-label', `Открыть меню пользователя: ${displayName}`);
           guestMenu.hidden = true;
           userMenu.hidden = false;
           guestIcon.hidden = true;
           userAvatar.hidden = false;
           accountName.textContent = user.email || displayName;
-          userAvatar.src = user.photoURL || 'images/logo.png';
+          userAvatar.dataset.fallbackUsed = 'false';
+          userAvatar.src = typeof user.photoURL === 'string' && user.photoURL.trim()
+            ? user.photoURL
+            : 'images/logo.png';
           userAvatar.alt = `Аватар: ${displayName}`;
           window.darkLunarsUserName = displayName;
         }
       };
+
+      userAvatar.addEventListener('error', () => {
+        if (userAvatar.dataset.fallbackUsed === 'true') return;
+        userAvatar.dataset.fallbackUsed = 'true';
+        userAvatar.src = 'images/logo.png';
+      });
     })();
   </script>
 
