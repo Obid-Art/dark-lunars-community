@@ -1,209 +1,495 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Вход в систему Dark Lunars</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#05080d">
+  <meta name="description" content="Безопасный вход для участников отряда и гостей Dark Lunars™.">
+  <title>Вход — Dark Lunars™</title>
+  <link rel="preload" href="images/mlbb_bg.jpg" as="image" fetchpriority="high">
+  <link rel="icon" href="images/logo.png" type="image/png">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      color-scheme: dark;
+      --bg: #05080d;
+      --panel: rgba(5, 13, 21, .9);
+      --panel-soft: rgba(9, 22, 32, .76);
+      --text: #f5fbff;
+      --muted: #a8bac5;
+      --accent: #55f6ff;
+      --accent-2: #0aa8ff;
+      --line: rgba(85, 246, 255, .22);
+      --danger: #ff7185;
+      --success: #55edaa;
+      --shadow: 0 28px 80px rgba(0, 0, 0, .58);
+      --radius: 22px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { min-width: 320px; }
     body {
-      font-family: Arial, sans-serif;
-      background: #0a0a0a;
-      color: white;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      min-width: 320px;
+      min-height: 100svh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: max(22px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(22px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+      overflow-x: hidden;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      background: var(--bg) url('images/mlbb_bg.jpg') no-repeat center center fixed;
+      background-size: cover;
     }
-    .container {
-      background: #111;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 0 20px #00ffff50;
-      text-align: center;
-      width: 380px;
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        linear-gradient(115deg, rgba(2, 6, 10, .94) 0 36%, rgba(2, 7, 12, .66) 70%, rgba(2, 6, 10, .88)),
+        radial-gradient(circle at 70% 20%, rgba(0, 174, 255, .18), transparent 38%);
     }
-    .container img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      margin-bottom: 20px;
-      box-shadow: 0 0 12px #00ffff80;
+    body::after {
+      content: "";
+      position: fixed;
+      inset: -100vh 0 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: .24;
+      background-image: radial-gradient(circle, rgba(225, 250, 255, .92) 0 1px, transparent 1.5px);
+      background-size: 78px 78px;
+      animation: snowfall 36s linear infinite;
     }
-    h2 {
-      color: #00ffff;
-      margin-bottom: 20px;
+    @keyframes snowfall { to { transform: translate3d(-28px, 100vh, 0); } }
+    button, input { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    [hidden] { display: none !important; }
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 3px solid rgba(85, 246, 255, .72);
+      outline-offset: 3px;
     }
-    .tabs {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
+    .skip-link {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 20;
+      padding: 9px 12px;
+      color: #001216;
+      font-weight: 850;
+      text-decoration: none;
+      background: var(--accent);
+      border-radius: 9px;
+      transform: translateY(-160%);
     }
-    .tabs button {
-      padding: 10px 20px;
-      border: none;
-      background: #222;
-      color: white;
-      cursor: pointer;
+    .skip-link:focus { transform: translateY(0); }
+    .auth-shell {
+      width: min(980px, 100%);
+      min-height: 620px;
+      display: grid;
+      grid-template-columns: minmax(280px, .9fr) minmax(390px, 1.1fr);
+      overflow: hidden;
+      background: rgba(4, 10, 16, .78);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow), 0 0 44px rgba(85, 246, 255, .08);
+      backdrop-filter: blur(18px);
     }
-    .tabs button.active {
-      background: #00bfff;
-      font-weight: bold;
-    }
-    .form-section {
-      display: none;
-    }
-    .form-section.active {
-      display: block;
-    }
-    input[type="text"], input[type="password"], input[type="email"] {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 20px;
-      border: none;
-      border-radius: 5px;
-      background: #222;
-      color: white;
-    }
-    .password-wrapper {
+    .brand-panel {
       position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(30px, 5vw, 52px);
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(4, 12, 19, .5), rgba(4, 12, 19, .92)),
+        radial-gradient(circle at 35% 20%, rgba(85, 246, 255, .2), transparent 38%);
+      border-right: 1px solid var(--line);
     }
-    .password-wrapper input {
-      padding-right: 40px;
-    }
-    .password-wrapper .toggle-password {
+    .brand-panel::after {
+      content: "";
       position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      cursor: pointer;
+      right: -120px;
+      bottom: -160px;
+      width: 340px;
+      aspect-ratio: 1;
+      border: 1px solid rgba(85, 246, 255, .15);
+      border-radius: 50%;
+      box-shadow: 0 0 80px rgba(85, 246, 255, .08) inset;
     }
-    button {
+    .brand {
+      position: relative;
+      z-index: 1;
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--accent);
+      font-weight: 900;
+      letter-spacing: .035em;
+      text-decoration: none;
+    }
+    .brand img {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+      border: 1px solid rgba(85, 246, 255, .55);
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(85, 246, 255, .22);
+    }
+    .brand-copy { position: relative; z-index: 1; }
+    .eyebrow { margin: 0 0 10px; color: var(--accent); font-size: .72rem; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; }
+    .brand-copy h1 { margin: 0; font-size: clamp(2.35rem, 5vw, 4.6rem); line-height: .98; letter-spacing: -.05em; }
+    .brand-copy p { max-width: 360px; margin: 20px 0 0; color: #bdccd4; }
+    .back-link { position: relative; z-index: 1; width: fit-content; color: var(--muted); font-size: .9rem; font-weight: 750; text-decoration: none; }
+    .back-link:hover { color: var(--accent); }
+    .form-panel { display: flex; flex-direction: column; justify-content: center; padding: clamp(28px, 6vw, 58px); background: var(--panel); }
+    .form-heading h2 { margin: 0; font-size: clamp(1.7rem, 4vw, 2.4rem); letter-spacing: -.025em; }
+    .form-heading p { margin: 8px 0 0; color: var(--muted); font-size: .94rem; }
+    .tabs {
+      margin: 28px 0 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding: 5px;
+      background: rgba(255, 255, 255, .035);
+      border: 1px solid rgba(255, 255, 255, .07);
+      border-radius: 13px;
+    }
+    .tab {
+      min-height: 45px;
+      padding: 9px 12px;
+      cursor: pointer;
+      color: var(--muted);
+      font-weight: 800;
+      background: transparent;
+      border: 0;
+      border-radius: 9px;
+    }
+    .tab[aria-selected="true"] { color: #001217; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 7px 20px rgba(0, 174, 255, .18); }
+    .auth-form { display: grid; gap: 17px; }
+    .field { display: grid; gap: 7px; }
+    .field label { color: #d8e7ed; font-size: .86rem; font-weight: 760; }
+    .input-wrap { position: relative; }
+    .input-wrap input {
       width: 100%;
-      padding: 12px;
-      background: #00bfff;
-      border: none;
-      color: white;
-      font-weight: bold;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: 0.3s;
+      min-height: 50px;
+      padding: 12px 14px;
+      color: var(--text);
+      caret-color: var(--accent);
+      background: rgba(255, 255, 255, .045);
+      border: 1px solid rgba(169, 211, 226, .16);
+      border-radius: 11px;
+      transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
     }
-    button:hover {
-      background: #0088cc;
+    .input-wrap input::placeholder { color: #788d99; }
+    .input-wrap input:hover { border-color: rgba(85, 246, 255, .34); }
+    .input-wrap input:focus { border-color: var(--accent); background: rgba(85, 246, 255, .055); box-shadow: 0 0 0 4px rgba(85, 246, 255, .08); outline: none; }
+    .input-wrap--password input { padding-right: 86px; }
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      min-height: 34px;
+      padding: 5px 8px;
+      cursor: pointer;
+      color: var(--accent);
+      font-size: .75rem;
+      font-weight: 800;
+      background: rgba(85, 246, 255, .07);
+      border: 0;
+      border-radius: 7px;
+      transform: translateY(-50%);
+    }
+    .form-options { display: flex; align-items: center; justify-content: space-between; gap: 14px; color: var(--muted); font-size: .82rem; }
+    .remember { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+    .remember input { width: 17px; height: 17px; accent-color: var(--accent-2); }
+    .security-note { margin: 0; color: #8ea3ae; font-size: .78rem; }
+    .submit-button {
+      min-height: 50px;
+      padding: 12px 18px;
+      cursor: pointer;
+      color: #001217;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: 0;
+      border-radius: 11px;
+      box-shadow: 0 12px 30px rgba(0, 174, 255, .18);
+      transition: transform 160ms ease, filter 160ms ease;
+    }
+    .submit-button:hover { filter: brightness(1.08); transform: translateY(-2px); }
+    .submit-button:disabled { cursor: wait; filter: grayscale(.3); opacity: .7; transform: none; }
+    .status { min-height: 22px; margin: -2px 0 0; color: var(--muted); font-size: .84rem; }
+    .status[data-state="error"] { color: var(--danger); }
+    .status[data-state="success"] { color: var(--success); }
+    .register-copy { margin: 23px 0 0; color: var(--muted); font-size: .9rem; text-align: center; }
+    .register-copy a { color: var(--accent); font-weight: 850; text-decoration: none; }
+    .register-copy a:hover { text-decoration: underline; text-underline-offset: 4px; }
+    @media (max-width: 760px) {
+      body { place-items: start center; background-position: 58% center; }
+      .auth-shell { min-height: 0; grid-template-columns: 1fr; }
+      .brand-panel { min-height: 220px; gap: 42px; padding: 26px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .brand-copy h1 { font-size: clamp(2.35rem, 13vw, 3.9rem); }
+      .brand-copy p { margin-top: 13px; }
+      .form-panel { padding: 28px 22px 32px; }
+      .tabs { margin-top: 22px; }
+      .tab { font-size: .82rem; }
+    }
+    @media (max-width: 430px) {
+      .brand-panel { min-height: 190px; }
+      .brand-copy p { display: none; }
+      .form-options { align-items: flex-start; flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      body::after { display: none; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <img src="images/logo.png" alt="Dark Lunars Logo">
-    <h2>Вход в систему Dark Lunars</h2>
-    <div class="tabs">
-      <button class="tab-button active" onclick="switchTab('squad')">Участник отряда</button>
-      <button class="tab-button" onclick="switchTab('firebase')">Гость (email)</button>
-    </div>
-
-    <!-- Участник отряда -->
-    <div class="form-section active" id="squad">
-      <input type="text" placeholder="Логин" id="login">
-      <div class="password-wrapper">
-        <input type="password" placeholder="Пароль" id="password">
-        <span class="toggle-password" onclick="togglePassword('password')">👁️</span>
+  <a class="skip-link" href="#auth-content">Перейти к форме входа</a>
+  <main class="auth-shell" id="auth-content">
+    <section class="brand-panel" aria-labelledby="page-title">
+      <a class="brand" href="index.html" aria-label="Dark Lunars — главная">
+        <img src="images/logo.png" width="48" height="48" alt="" decoding="async">
+        <span>Dark Lunars™</span>
+      </a>
+      <div class="brand-copy">
+        <p class="eyebrow">MLBB Community</p>
+        <h1 id="page-title">Вернитесь<br>в строй.</h1>
+        <p>Один вход — для личного профиля, панели отряда и будущего общего чата.</p>
       </div>
-      <button onclick="validateLogin()">Войти</button>
-    <div style="margin-top: 15px;">
-      <a href="registration.html" style="
-       display: inline-block;
-       color: #00ffff;
-       text-decoration: none;
-       font-size: 14px;
-       padding: 10px 0;
-     ">Зарегистрироваться</a>
-    </div>
-  </div>
+      <a class="back-link" href="index.html">← Вернуться на главную</a>
+    </section>
 
-    <!-- Firebase (гость) -->
-    <div class="form-section" id="firebase">
-      <input type="email" placeholder="Email" id="email">
-      <div class="password-wrapper">
-        <input type="password" placeholder="Пароль" id="firebase-password">
-        <span class="toggle-password" onclick="togglePassword('firebase-password')">👁️</span>
+    <section class="form-panel" aria-labelledby="form-title">
+      <div class="form-heading">
+        <h2 id="form-title">Вход в аккаунт</h2>
+        <p>Выберите тип учётной записи и продолжите.</p>
       </div>
-      <button onclick="firebaseLogin()">Войти через Firebase</button>
-    <div style="margin-top: 15px;">
-      <a href="registration.html" style="
-       display: inline-block;
-       color: #00ffff;
-       text-decoration: none;
-       font-size: 14px;
-       padding: 10px 0;
-     ">Зарегистрироваться</a>
-    </div>
-  </div>
+
+      <div class="tabs" role="tablist" aria-label="Тип входа">
+        <button class="tab" id="member-tab" type="button" role="tab" aria-selected="true" aria-controls="member-panel">Участник отряда</button>
+        <button class="tab" id="guest-tab" type="button" role="tab" aria-selected="false" aria-controls="guest-panel" tabindex="-1">Гость по email</button>
+      </div>
+
+      <div id="member-panel" role="tabpanel" aria-labelledby="member-tab">
+        <form class="auth-form" id="member-form" novalidate>
+          <div class="field">
+            <label for="member-login">Логин участника</label>
+            <div class="input-wrap">
+              <input id="member-login" name="login" type="text" maxlength="40" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Например, Art" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="member-password">Пароль</label>
+            <div class="input-wrap input-wrap--password">
+              <input id="member-password" name="password" type="password" minlength="6" maxlength="128" autocomplete="current-password" placeholder="Введите пароль" required>
+              <button class="toggle-password" type="button" data-target="member-password" aria-label="Показать пароль">Показать</button>
+            </div>
+          </div>
+          <div class="form-options">
+            <label class="remember"><input id="member-remember" type="checkbox" checked> Запомнить меня</label>
+            <span>Доступ выдаёт лидер отряда</span>
+          </div>
+          <p class="security-note">Пароль проверяется Firebase и не хранится в коде сайта.</p>
+          <button class="submit-button" type="submit">Войти в панель отряда</button>
+          <p class="status" id="member-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <div id="guest-panel" role="tabpanel" aria-labelledby="guest-tab" hidden>
+        <form class="auth-form" id="guest-form" novalidate>
+          <div class="field">
+            <label for="guest-email">Email</label>
+            <div class="input-wrap">
+              <input id="guest-email" name="email" type="email" maxlength="254" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" placeholder="name@example.com" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="guest-password">Пароль</label>
+            <div class="input-wrap input-wrap--password">
+              <input id="guest-password" name="password" type="password" minlength="6" maxlength="128" autocomplete="current-password" placeholder="Введите пароль" required>
+              <button class="toggle-password" type="button" data-target="guest-password" aria-label="Показать пароль">Показать</button>
+            </div>
+          </div>
+          <div class="form-options">
+            <label class="remember"><input id="guest-remember" type="checkbox" checked> Запомнить меня</label>
+            <span>Для профиля и чата</span>
+          </div>
+          <button class="submit-button" type="submit">Войти как гость</button>
+          <p class="status" id="guest-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <p class="register-copy">Нет аккаунта? <a id="register-link" href="registration.html">Зарегистрироваться</a></p>
+    </section>
+  </main>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+    import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+    import {
+      browserLocalPersistence,
+      browserSessionPersistence,
+      getAuth,
+      setPersistence,
+      signInWithEmailAndPassword,
+      signOut
+    } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
 
     const firebaseConfig = {
-      apiKey: "AIzaSyA2V63cXu3yR9xClBDepOIINXA04-aCOEM",
-      authDomain: "darklunarsweb.firebaseapp.com",
-      projectId: "darklunarsweb",
-      storageBucket: "darklunarsweb.appspot.com",
-      messagingSenderId: "817766201322",
-      appId: "1:817766201322:web:64053b10492f72ebe22493"
+      apiKey: 'AIzaSyA2V63cXu3yR9xClBDepOIINXA04-aCOEM',
+      authDomain: 'darklunarsweb.firebaseapp.com',
+      projectId: 'darklunarsweb',
+      storageBucket: 'darklunarsweb.appspot.com',
+      messagingSenderId: '817766201322',
+      appId: '1:817766201322:web:64053b10492f72ebe22493'
     };
 
-    const app = initializeApp(firebaseConfig);
+    const app = getApps()[0] || initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    window.firebaseLogin = function() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("firebase-password").value;
-      signInWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          alert("Успешный вход через Firebase!");
-          window.location.href = "main.html";
-        })
-        .catch((error) => {
-          alert("Ошибка входа: " + error.message);
-        });
-    }
-  </script>
+    // Публичны только логины. Пароли и роли должны находиться в Firebase.
+    const memberAliases = Object.freeze({
+      art: 'art@members.darklunars.example',
+      kirigaya: 'kirigaya@members.darklunars.example',
+      lukas: 'lucas@members.darklunars.example',
+      lucas: 'lucas@members.darklunars.example',
+      zombie: 'zombie@members.darklunars.example',
+      loki: 'loki@members.darklunars.example'
+    });
 
-  <script>
-    function switchTab(tab) {
-      document.querySelectorAll('.form-section').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
-      document.getElementById(tab).classList.add('active');
-      event.target.classList.add('active');
-    }
-
-    function togglePassword(id) {
-      const input = document.getElementById(id);
-      input.type = input.type === "password" ? "text" : "password";
-    }
-
-   function validateLogin() {
-    const login = document.getElementById("login").value.trim();
-    const password = document.getElementById("password").value.trim();
-
-    const users = {
-      "Art": { password: "Redgard0_0", nickname: "Art" },
-      "Kirigaya": { password: "Kirito", nickname: "Kirigaya" },
-      "Lukas": { password: "Loki", nickname: "L U C A S" },
-      "zombie": { password: "z0mb1e", nickname: "Z.O.M.B.I.E" },
-      "Barry": { password: "Barry123", nickname: "ORIF0090" }
+    const params = new URLSearchParams(window.location.search);
+    const tabs = [...document.querySelectorAll('[role="tab"]')];
+    const panels = {
+      'member-tab': document.getElementById('member-panel'),
+      'guest-tab': document.getElementById('guest-panel')
     };
 
-    if (users[login] && users[login].password === password) {
-      alert(`Добро пожаловать, ${users[login].nickname}, мы ждали вас.`);
-      window.location.href = "main.html";
-    } else {
-      alert("Неверный логин или пароль участника отряда!");
+    function normalizeAlias(value) {
+      return value.toLocaleLowerCase('ru-RU').replace(/[.\s_-]+/g, '');
     }
-  }
-</script>
+
+    function setTab(tab) {
+      tabs.forEach((item) => {
+        const active = item === tab;
+        item.setAttribute('aria-selected', String(active));
+        item.tabIndex = active ? 0 : -1;
+        panels[item.id].hidden = !active;
+      });
+      const firstInput = panels[tab.id].querySelector('input');
+      window.setTimeout(() => firstInput?.focus(), 0);
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => setTab(tab));
+      tab.addEventListener('keydown', (event) => {
+        if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+        event.preventDefault();
+        const index = tabs.indexOf(tab);
+        const next = event.key === 'ArrowRight' ? (index + 1) % tabs.length : (index - 1 + tabs.length) % tabs.length;
+        setTab(tabs[next]);
+      });
+    });
+
+    document.querySelectorAll('.toggle-password').forEach((button) => {
+      button.addEventListener('click', () => {
+        const input = document.getElementById(button.dataset.target);
+        const reveal = input.type === 'password';
+        input.type = reveal ? 'text' : 'password';
+        button.textContent = reveal ? 'Скрыть' : 'Показать';
+        button.setAttribute('aria-label', reveal ? 'Скрыть пароль' : 'Показать пароль');
+      });
+    });
+
+    function setStatus(element, message = '', state = '') {
+      element.textContent = message;
+      element.dataset.state = state;
+    }
+
+    function safeNext(fallback) {
+      const requested = params.get('next');
+      if (!requested) return new URL(fallback, window.location.href);
+      try {
+        const target = new URL(requested, window.location.href);
+        return target.origin === window.location.origin ? target : new URL(fallback, window.location.href);
+      } catch {
+        return new URL(fallback, window.location.href);
+      }
+    }
+
+    function readableError(code, memberMode = false) {
+      const errors = {
+        'auth/invalid-email': 'Проверьте формат email.',
+        'auth/invalid-login-credentials': 'Неверный логин, email или пароль.',
+        'auth/user-not-found': 'Учётная запись не найдена.',
+        'auth/wrong-password': 'Неверный логин, email или пароль.',
+        'auth/too-many-requests': 'Слишком много попыток. Подождите и попробуйте снова.',
+        'auth/network-request-failed': 'Нет соединения с сервисом входа. Проверьте интернет.'
+      };
+      return errors[code] || (memberMode
+        ? 'Вход не выполнен. Если логин ещё не перенесён в Firebase, обратитесь к лидеру отряда.'
+        : 'Вход не выполнен. Проверьте данные и попробуйте ещё раз.');
+    }
+
+    async function submitLogin({ form, status, email, password, remember, memberMode, fallback }) {
+      if (!form.reportValidity()) return;
+      const submit = form.querySelector('[type="submit"]');
+      submit.disabled = true;
+      setStatus(status, 'Проверяем учётную запись…');
+      try {
+        await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
+        await signInWithEmailAndPassword(auth, email, password);
+        setStatus(status, 'Вход выполнен. Переходим…', 'success');
+        window.location.assign(safeNext(fallback).href);
+      } catch (error) {
+        setStatus(status, readableError(error?.code, memberMode), 'error');
+        submit.disabled = false;
+      }
+    }
+
+    document.getElementById('member-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const login = document.getElementById('member-login').value.trim();
+      const normalized = normalizeAlias(login);
+      const email = login.includes('@') ? login : memberAliases[normalized];
+      const status = document.getElementById('member-status');
+      if (!email) {
+        setStatus(status, 'Такого логина нет в списке участников отряда.', 'error');
+        return;
+      }
+      submitLogin({
+        form: event.currentTarget,
+        status,
+        email,
+        password: document.getElementById('member-password').value,
+        remember: document.getElementById('member-remember').checked,
+        memberMode: true,
+        fallback: 'main.html'
+      });
+    });
+
+    document.getElementById('guest-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitLogin({
+        form: event.currentTarget,
+        status: document.getElementById('guest-status'),
+        email: document.getElementById('guest-email').value.trim(),
+        password: document.getElementById('guest-password').value,
+        remember: document.getElementById('guest-remember').checked,
+        memberMode: false,
+        fallback: 'index.html'
+      });
+    });
+
+    const next = params.get('next');
+    if (next) document.getElementById('register-link').href = `registration.html?next=${encodeURIComponent(next)}`;
+
+    if (params.get('switch') === '1') {
+      await signOut(auth).catch(() => {});
+      setStatus(document.getElementById('member-status'), 'Предыдущая сессия завершена. Войдите в другой аккаунт.', 'success');
+    }
+    if (params.get('tab') === 'guest') setTab(document.getElementById('guest-tab'));
+  </script>
 </body>
 </html>
