@@ -220,17 +220,25 @@
     .auth-link:hover { transform: translateY(-2px); border-color: rgba(85, 246, 255, 0.48); }
 
     .user-button {
-      width: 46px;
+      min-width: 46px;
       height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
       padding: 2px;
       cursor: pointer;
       color: var(--text);
       background: rgba(85, 246, 255, 0.08);
       border: 1px solid rgba(85, 246, 255, 0.46);
-      border-radius: 50%;
+      border-radius: 999px;
       box-shadow: 0 0 18px rgba(85, 246, 255, 0.16);
     }
-    .user-button img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+    .user-button[data-role="leader"] { border-color: rgba(255, 210, 116, .82); box-shadow: 0 0 22px rgba(255, 210, 116, .22); }
+    .user-button[data-role="guest"] { padding: 3px 11px 3px 4px; }
+    .user-button img { width: 40px; height: 40px; object-fit: cover; border-radius: 50%; }
+    .guest-user-icon { width: 36px; height: 36px; padding: 7px; color: var(--accent); background: rgba(85, 246, 255, .06); border-radius: 50%; }
+    .user-button-label { color: var(--accent); font-size: .76rem; font-weight: 850; }
     .account-menu {
       position: absolute;
       top: calc(100% + 12px);
@@ -242,7 +250,10 @@
       border-radius: 15px;
       box-shadow: var(--shadow);
     }
-    .account-name { padding: 10px 12px 12px; color: var(--muted); font-size: 0.82rem; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+    .account-name { padding: 10px 12px 12px; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+    .account-display-name { display: block; color: var(--text); font-size: .9rem; font-weight: 850; }
+    .account-email { display: block; margin-top: 2px; color: var(--muted); font-size: .75rem; }
+    .account-role { display: block; margin-top: 3px; color: var(--accent); font-size: .7rem; font-weight: 850; }
     .account-menu a,
     .account-menu button {
       width: 100%;
@@ -444,13 +455,20 @@
         </div>
 
         <div id="user-control" hidden>
-          <button class="user-button" id="user-menu-toggle" type="button" aria-label="Открыть меню пользователя" aria-haspopup="menu" aria-expanded="false">
+          <button class="user-button" id="user-menu-toggle" data-role="guest" type="button" aria-label="Открыть меню пользователя" aria-haspopup="menu" aria-expanded="false">
             <img id="user-avatar" src="images/logo.png" width="42" height="42" alt="Аватар пользователя">
+            <svg class="guest-user-icon" id="guest-user-icon" viewBox="0 0 24 24" aria-hidden="true" hidden><path fill="currentColor" d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.14 0-7.5 2.35-7.5 5.25V21h15v-1.75C19.5 16.35 16.14 14 12 14Z"/></svg>
+            <span class="user-button-label" id="user-button-label" hidden>Гость</span>
           </button>
           <div class="account-menu" id="account-menu" role="menu" hidden>
-            <div class="account-name" id="account-name">Пользователь</div>
+            <div class="account-name" id="account-name">
+              <span class="account-display-name" id="account-display-name">Пользователь</span>
+              <span class="account-email" id="account-email"></span>
+              <span class="account-role" id="account-role">Гость сообщества</span>
+            </div>
             <a href="HTML Files/profile.html" role="menuitem">Профиль</a>
-            <a href="login.html?switch=1" id="switch-account" role="menuitem">Войти в другой аккаунт</a>
+            <a href="main.html" id="panel-link" role="menuitem" hidden>Панель отряда</a>
+            <a href="login.html?switch=1&amp;next=index.html" id="switch-account" role="menuitem">Войти в другой аккаунт</a>
             <button type="button" id="logout-button" role="menuitem">Выйти</button>
           </div>
         </div>
@@ -521,10 +539,10 @@
   </button>
 
   <aside class="chat-panel" id="chat-panel" role="dialog" aria-modal="false" aria-labelledby="chat-title" hidden>
-    <div class="chat-header" data-chat-build="firebase-chat-v2">
+    <div class="chat-header" data-chat-build="firebase-chat-v3">
       <div>
         <h2 class="chat-title" id="chat-title">Чат отряда</h2>
-        <p class="chat-status" id="chat-connection-status" data-state="connecting">Firebase Chat v2 · подключение…</p>
+        <p class="chat-status" id="chat-connection-status" data-state="connecting">Firebase Chat v3 · подключение…</p>
       </div>
       <button class="icon-button" id="chat-close" type="button" aria-label="Закрыть чат">✕</button>
     </div>
@@ -535,7 +553,7 @@
         <input id="chat-message" name="message" type="text" maxlength="500" autocomplete="off" placeholder="Ожидание Firebase…" required disabled>
         <button class="send-button" id="chat-send-button" type="submit" disabled>Подождите</button>
       </div>
-      <div class="chat-note"><span id="chat-access-note">Firebase Chat v2 · сообщения загружаются.</span><span id="chat-counter">0/500</span></div>
+      <div class="chat-note"><span id="chat-access-note">Firebase Chat v3 · сообщения загружаются.</span><span id="chat-counter">0/500</span></div>
     </form>
   </aside>
 
@@ -551,8 +569,13 @@
       const userControl = document.getElementById('user-control');
       const userMenuToggle = document.getElementById('user-menu-toggle');
       const accountMenu = document.getElementById('account-menu');
-      const accountName = document.getElementById('account-name');
+      const accountDisplayName = document.getElementById('account-display-name');
+      const accountEmail = document.getElementById('account-email');
+      const accountRole = document.getElementById('account-role');
+      const panelLink = document.getElementById('panel-link');
       const userAvatar = document.getElementById('user-avatar');
+      const guestUserIcon = document.getElementById('guest-user-icon');
+      const userButtonLabel = document.getElementById('user-button-label');
       const chatToggle = document.getElementById('chat-toggle');
       const chatPanel = document.getElementById('chat-panel');
       const chatClose = document.getElementById('chat-close');
@@ -567,6 +590,29 @@
       let remoteMessages = [];
       let sendRemoteMessage = null;
       let sendingMessage = false;
+
+      const memberAvatars = Object.freeze({
+        art: 'images/art.jpg',
+        kirigaya: 'images/kirigaya.jpg',
+        lucas: 'images/L U C A S.jpg',
+        zombie: 'images/Z.O.M.B.I.E.jpg',
+        loki: 'images/L O K I.jpg'
+      });
+
+      function profileKey(value = '') {
+        return value.toLocaleLowerCase('ru-RU').replace(/[.\s_-]+/g, '');
+      }
+
+      function showIdentityIcon(label = 'Гость') {
+        userAvatar.hidden = true;
+        guestUserIcon.hidden = false;
+        userButtonLabel.hidden = false;
+        userButtonLabel.textContent = label;
+      }
+
+      userAvatar.addEventListener('error', () => {
+        showIdentityIcon(userAvatar.dataset.fallbackLabel || 'Пользователь');
+      });
 
       document.getElementById('current-year').textContent = String(new Date().getFullYear());
 
@@ -718,20 +764,39 @@
       };
 
       window.DarkLunarsHome = {
-        showUser(user) {
+        showUser(user, claims = {}) {
           if (!user) {
             authLinks.hidden = false;
             userControl.hidden = true;
+            panelLink.hidden = true;
             window.darkLunarsUserName = '';
             window.DarkLunarsChatUI?.setUser(null);
             setAccountMenu(false);
             return;
           }
-          const displayName = user.displayName || user.email?.split('@')[0] || 'Пользователь';
+          const nickname = typeof claims.squadNickname === 'string' ? claims.squadNickname : '';
+          const displayName = nickname || user.displayName || user.email?.split('@')[0] || 'Пользователь';
+          const role = claims.squadRole === 'leader' ? 'leader' : claims.squadRole === 'member' ? 'member' : 'guest';
+          const roleLabel = role === 'leader' ? 'Лидер отряда' : role === 'member' ? 'Участник отряда' : 'Гость сообщества';
+          const hasSquadRole = role === 'leader' || role === 'member';
           authLinks.hidden = true;
           userControl.hidden = false;
-          accountName.textContent = user.email || displayName;
-          userAvatar.src = user.photoURL || 'images/logo.png';
+          accountDisplayName.textContent = displayName;
+          accountEmail.textContent = user.email || '';
+          accountRole.textContent = roleLabel;
+          panelLink.hidden = !hasSquadRole;
+          userMenuToggle.dataset.role = role;
+          userMenuToggle.setAttribute('aria-label', `Открыть меню: ${displayName}, ${roleLabel}`);
+          const avatarSource = memberAvatars[profileKey(displayName)] || user.photoURL || '';
+          if (hasSquadRole && avatarSource) {
+            userAvatar.dataset.fallbackLabel = role === 'leader' ? 'Лидер' : 'Участник';
+            userAvatar.hidden = false;
+            guestUserIcon.hidden = true;
+            userButtonLabel.hidden = true;
+            userAvatar.src = avatarSource;
+          } else {
+            showIdentityIcon(hasSquadRole ? (role === 'leader' ? 'Лидер' : 'Участник') : 'Гость');
+          }
           userAvatar.alt = `Аватар: ${displayName}`;
           window.darkLunarsUserName = displayName;
           window.DarkLunarsChatUI?.setUser(user);
@@ -758,7 +823,7 @@
 
   <script type="module">
     import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
-    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js';
+    import { getAuth, getIdTokenResult, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js';
     import {
       addDoc,
       collection,
@@ -788,7 +853,7 @@
     window.DarkLunarsChatUI?.setSender(async (text) => {
       const user = auth.currentUser;
       if (!user) throw new Error('auth-required');
-      const authorName = (user.displayName || user.email?.split('@')[0] || 'Пользователь').trim().slice(0, 40);
+      const authorName = (window.darkLunarsUserName || user.displayName || user.email?.split('@')[0] || 'Пользователь').trim().slice(0, 40);
       await addDoc(chatCollection, {
         authorId: user.uid,
         authorName,
@@ -802,7 +867,7 @@
         .map((document) => ({ id: document.id, ...document.data() }))
         .reverse();
       window.DarkLunarsChatUI?.setMessages(messages);
-      window.DarkLunarsChatUI?.setStatus('Общий чат · Firebase подключён', 'online');
+      window.DarkLunarsChatUI?.setStatus('Общий чат · Firebase подключён · v3', 'online');
     }, (error) => {
       const message = error?.code === 'permission-denied'
         ? 'Чат закрыт правилами Firebase'
@@ -810,7 +875,18 @@
       window.DarkLunarsChatUI?.setStatus(message, 'error');
     });
 
-    onAuthStateChanged(auth, (user) => window.DarkLunarsHome?.showUser(user));
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.DarkLunarsHome?.showUser(null);
+        return;
+      }
+      try {
+        const token = await getIdTokenResult(user);
+        window.DarkLunarsHome?.showUser(user, token.claims);
+      } catch {
+        window.DarkLunarsHome?.showUser(user);
+      }
+    });
 
     document.getElementById('logout-button').addEventListener('click', async () => {
       await signOut(auth).catch(() => {});
@@ -820,7 +896,7 @@
     document.getElementById('switch-account').addEventListener('click', async (event) => {
       event.preventDefault();
       await signOut(auth).catch(() => {});
-      window.location.href = event.currentTarget.href;
+      window.location.assign(event.currentTarget.href);
     });
   </script>
 </body>
