@@ -384,14 +384,11 @@
     .chat-header { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 18px; border-bottom: 1px solid var(--line); }
     .chat-title { margin: 0; font-size: 1rem; }
     .chat-status { margin: 2px 0 0; color: var(--muted); font-size: 0.72rem; }
-    .chat-status[data-state="online"] { color: #8af7c5; }
-    .chat-status[data-state="error"] { color: #ff9b9b; }
     .icon-button { width: 38px; height: 38px; display: grid; place-items: center; cursor: pointer; color: var(--text); background: transparent; border: 1px solid var(--line); border-radius: 10px; }
     .icon-button:hover { color: var(--accent); background: rgba(85, 246, 255, 0.07); }
     .chat-messages { min-height: 0; padding: 18px; overflow-y: auto; overscroll-behavior: contain; scrollbar-color: rgba(85, 246, 255, 0.45) transparent; }
     .chat-empty { margin: 48px 22px; color: var(--muted); text-align: center; font-size: 0.88rem; }
-    .message { max-width: 86%; margin: 0 auto 10px 0; padding: 10px 12px; background: rgba(255, 255, 255, 0.045); border: 1px solid rgba(166, 184, 194, 0.16); border-radius: 14px 14px 14px 4px; overflow-wrap: anywhere; }
-    .message--own { margin-right: 0; margin-left: auto; background: linear-gradient(145deg, rgba(0, 168, 255, 0.25), rgba(85, 246, 255, 0.12)); border-color: rgba(85, 246, 255, 0.2); border-radius: 14px 14px 4px 14px; }
+    .message { max-width: 86%; margin: 0 0 10px auto; padding: 10px 12px; background: linear-gradient(145deg, rgba(0, 168, 255, 0.25), rgba(85, 246, 255, 0.12)); border: 1px solid rgba(85, 246, 255, 0.2); border-radius: 14px 14px 4px 14px; overflow-wrap: anywhere; }
     .message-meta { margin-bottom: 3px; color: var(--accent); font-size: 0.68rem; font-weight: 800; }
     .message-text { font-size: 0.88rem; white-space: pre-wrap; }
     .chat-form { padding: 12px; border-top: 1px solid var(--line); }
@@ -399,8 +396,6 @@
     .chat-form input { min-width: 0; flex: 1; padding: 11px 12px; color: var(--text); background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(85, 246, 255, 0.18); border-radius: 11px; }
     .chat-form input::placeholder { color: #788b96; }
     .send-button { min-width: 82px; padding: 0 14px; cursor: pointer; color: #001419; font-weight: 900; background: var(--accent); border: 0; border-radius: 11px; }
-    .chat-form input:disabled { cursor: not-allowed; opacity: 0.72; }
-    .send-button:disabled { cursor: wait; opacity: 0.62; }
     .chat-note { margin: 8px 3px 0; display: flex; justify-content: space-between; gap: 10px; color: #71848f; font-size: 0.68rem; }
 
     .site-footer { margin-top: auto; padding: 24px; color: #81939d; text-align: center; font-size: 0.82rem; background: rgba(2, 7, 11, 0.82); border-top: 1px solid rgba(85, 246, 255, 0.1); }
@@ -521,10 +516,10 @@
   </button>
 
   <aside class="chat-panel" id="chat-panel" role="dialog" aria-modal="false" aria-labelledby="chat-title" hidden>
-    <div class="chat-header" data-chat-build="firebase-chat-v2">
+    <div class="chat-header">
       <div>
         <h2 class="chat-title" id="chat-title">Чат отряда</h2>
-        <p class="chat-status" id="chat-connection-status" data-state="connecting">Firebase Chat v2 · подключение…</p>
+        <p class="chat-status">Локальный режим · это устройство</p>
       </div>
       <button class="icon-button" id="chat-close" type="button" aria-label="Закрыть чат">✕</button>
     </div>
@@ -532,10 +527,10 @@
     <form class="chat-form" id="chat-form">
       <label for="chat-message" class="visually-hidden">Сообщение</label>
       <div class="chat-input-row">
-        <input id="chat-message" name="message" type="text" maxlength="500" autocomplete="off" placeholder="Ожидание Firebase…" required disabled>
-        <button class="send-button" id="chat-send-button" type="submit" disabled>Подождите</button>
+        <input id="chat-message" name="message" type="text" maxlength="500" autocomplete="off" placeholder="Напишите сообщение…" required>
+        <button class="send-button" type="submit">Отправить</button>
       </div>
-      <div class="chat-note"><span id="chat-access-note">Firebase Chat v2 · сообщения загружаются.</span><span id="chat-counter">0/500</span></div>
+      <div class="chat-note"><span>Общий онлайн-чат подключим через Firebase.</span><span id="chat-counter">0/500</span></div>
     </form>
   </aside>
 
@@ -547,6 +542,8 @@
     (() => {
       'use strict';
 
+      const storageKey = 'dark-lunars-chat-v2';
+      const maxMessages = 50;
       const authLinks = document.getElementById('auth-links');
       const userControl = document.getElementById('user-control');
       const userMenuToggle = document.getElementById('user-menu-toggle');
@@ -558,15 +555,8 @@
       const chatClose = document.getElementById('chat-close');
       const chatForm = document.getElementById('chat-form');
       const chatInput = document.getElementById('chat-message');
-      const chatSendButton = document.getElementById('chat-send-button');
       const chatCounter = document.getElementById('chat-counter');
       const chatMessages = document.getElementById('chat-messages');
-      const chatConnectionStatus = document.getElementById('chat-connection-status');
-      const chatAccessNote = document.getElementById('chat-access-note');
-      let currentChatUser = null;
-      let remoteMessages = [];
-      let sendRemoteMessage = null;
-      let sendingMessage = false;
 
       document.getElementById('current-year').textContent = String(new Date().getFullYear());
 
@@ -590,7 +580,7 @@
         chatToggle.setAttribute('aria-label', open ? 'Закрыть чат' : 'Открыть чат');
         if (open) {
           renderMessages();
-          if (!chatInput.disabled) window.setTimeout(() => chatInput.focus(), 0);
+          window.setTimeout(() => chatInput.focus(), 0);
         }
       }
 
@@ -606,23 +596,29 @@
         if (!chatPanel.hidden) setChat(false);
       });
 
+      function readMessages() {
+        try {
+          const value = JSON.parse(localStorage.getItem(storageKey) || '[]');
+          if (!Array.isArray(value)) return [];
+          return value.filter((item) => item && typeof item.text === 'string').slice(-maxMessages);
+        } catch {
+          return [];
+        }
+      }
+
       function formatTime(timestamp) {
         try {
-          const milliseconds = typeof timestamp?.toMillis === 'function'
-            ? timestamp.toMillis()
-            : typeof timestamp === 'number'
-              ? timestamp
-              : Date.now();
-          return new Intl.DateTimeFormat('ru-RU', { hour: '2-digit', minute: '2-digit' }).format(new Date(milliseconds));
+          return new Intl.DateTimeFormat('ru-RU', { hour: '2-digit', minute: '2-digit' }).format(new Date(timestamp));
         } catch {
           return '';
         }
       }
 
       function renderMessages() {
+        const messages = readMessages();
         chatMessages.replaceChildren();
 
-        if (!remoteMessages.length) {
+        if (!messages.length) {
           const empty = document.createElement('p');
           empty.className = 'chat-empty';
           empty.textContent = 'Здесь пока тихо. Начните разговор первым.';
@@ -631,16 +627,15 @@
         }
 
         const fragment = document.createDocumentFragment();
-        remoteMessages.forEach((item) => {
+        messages.forEach((item) => {
           const message = document.createElement('div');
           message.className = 'message';
-          if (currentChatUser?.uid === item.authorId) message.classList.add('message--own');
           const meta = document.createElement('div');
           meta.className = 'message-meta';
-          meta.textContent = `${item.authorName || 'Пользователь'} · ${formatTime(item.createdAt)}`;
+          meta.textContent = `${item.author || 'Вы'} · ${formatTime(item.createdAt)}`;
           const text = document.createElement('div');
           text.className = 'message-text';
-          text.textContent = typeof item.text === 'string' ? item.text : '';
+          text.textContent = item.text;
           message.append(meta, text);
           fragment.append(message);
         });
@@ -652,70 +647,30 @@
         chatCounter.textContent = `${chatInput.value.length}/500`;
       });
 
-      function setComposerUser(user) {
-        currentChatUser = user || null;
-        const signedIn = Boolean(currentChatUser);
-        chatInput.disabled = !signedIn;
-        chatInput.placeholder = signedIn ? 'Напишите сообщение…' : 'Войдите, чтобы написать';
-        chatSendButton.disabled = sendingMessage;
-        chatSendButton.textContent = signedIn ? 'Отправить' : 'Войти';
-        chatAccessNote.textContent = signedIn
-          ? 'Общий чат · ваше сообщение увидят все посетители.'
-          : 'Читать могут все · для отправки войдите.';
-        renderMessages();
-      }
-
-      function openLogin() {
-        const loginUrl = new URL('login.html', window.location.href);
-        loginUrl.searchParams.set('tab', 'guest');
-        loginUrl.searchParams.set('next', `${window.location.pathname.split('/').pop() || 'index.html'}${window.location.search}${window.location.hash}`);
-        window.location.assign(loginUrl.href);
-      }
-
       let lastSentAt = 0;
-      chatForm.addEventListener('submit', async (event) => {
+      chatForm.addEventListener('submit', (event) => {
         event.preventDefault();
-        if (!currentChatUser) {
-          openLogin();
-          return;
-        }
-
         const text = chatInput.value.trim();
         const now = Date.now();
-        if (!text || sendingMessage || now - lastSentAt < 1200 || typeof sendRemoteMessage !== 'function') return;
+        if (!text || now - lastSentAt < 800) return;
         lastSentAt = now;
-        sendingMessage = true;
-        chatSendButton.disabled = true;
-        chatSendButton.textContent = '…';
-        try {
-          await sendRemoteMessage(text.slice(0, 500));
-          chatInput.value = '';
-          chatCounter.textContent = '0/500';
-        } catch {
-          chatAccessNote.textContent = 'Сообщение не отправлено. Проверьте соединение и попробуйте снова.';
-        } finally {
-          sendingMessage = false;
-          chatSendButton.disabled = false;
-          chatSendButton.textContent = 'Отправить';
-        }
+
+        const messages = readMessages();
+        messages.push({
+          id: `${now}-${Math.random().toString(16).slice(2)}`,
+          author: window.darkLunarsUserName || 'Вы',
+          text: text.slice(0, 500),
+          createdAt: now
+        });
+        localStorage.setItem(storageKey, JSON.stringify(messages.slice(-maxMessages)));
+        chatInput.value = '';
+        chatCounter.textContent = '0/500';
+        renderMessages();
       });
 
-      window.DarkLunarsChatUI = {
-        setMessages(messages) {
-          remoteMessages = Array.isArray(messages) ? messages : [];
-          renderMessages();
-        },
-        setStatus(message, state = '') {
-          chatConnectionStatus.textContent = message;
-          chatConnectionStatus.dataset.state = state;
-        },
-        setSender(sender) {
-          sendRemoteMessage = typeof sender === 'function' ? sender : null;
-          chatSendButton.disabled = !sendRemoteMessage;
-          if (sendRemoteMessage) setComposerUser(currentChatUser);
-        },
-        setUser: setComposerUser
-      };
+      window.addEventListener('storage', (event) => {
+        if (event.key === storageKey && !chatPanel.hidden) renderMessages();
+      });
 
       window.DarkLunarsHome = {
         showUser(user) {
@@ -723,7 +678,6 @@
             authLinks.hidden = false;
             userControl.hidden = true;
             window.darkLunarsUserName = '';
-            window.DarkLunarsChatUI?.setUser(null);
             setAccountMenu(false);
             return;
           }
@@ -734,7 +688,6 @@
           userAvatar.src = user.photoURL || 'images/logo.png';
           userAvatar.alt = `Аватар: ${displayName}`;
           window.darkLunarsUserName = displayName;
-          window.DarkLunarsChatUI?.setUser(user);
         }
       };
 
@@ -757,18 +710,8 @@
   </script>
 
   <script type="module">
-    import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
-    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js';
-    import {
-      addDoc,
-      collection,
-      getFirestore,
-      limit,
-      onSnapshot,
-      orderBy,
-      query,
-      serverTimestamp
-    } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
+    import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
 
     const firebaseConfig = {
       apiKey: 'AIzaSyA2V63cXu3yR9xClBDepOIINXA04-aCOEM',
@@ -781,35 +724,6 @@
 
     const app = getApps()[0] || initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
-    const chatCollection = collection(db, 'chatMessages');
-    const latestMessages = query(chatCollection, orderBy('createdAt', 'desc'), limit(50));
-
-    window.DarkLunarsChatUI?.setSender(async (text) => {
-      const user = auth.currentUser;
-      if (!user) throw new Error('auth-required');
-      const authorName = (user.displayName || user.email?.split('@')[0] || 'Пользователь').trim().slice(0, 40);
-      await addDoc(chatCollection, {
-        authorId: user.uid,
-        authorName,
-        text,
-        createdAt: serverTimestamp()
-      });
-    });
-
-    onSnapshot(latestMessages, (snapshot) => {
-      const messages = snapshot.docs
-        .map((document) => ({ id: document.id, ...document.data() }))
-        .reverse();
-      window.DarkLunarsChatUI?.setMessages(messages);
-      window.DarkLunarsChatUI?.setStatus('Общий чат · Firebase подключён', 'online');
-    }, (error) => {
-      const message = error?.code === 'permission-denied'
-        ? 'Чат закрыт правилами Firebase'
-        : 'Нет соединения с общим чатом';
-      window.DarkLunarsChatUI?.setStatus(message, 'error');
-    });
-
     onAuthStateChanged(auth, (user) => window.DarkLunarsHome?.showUser(user));
 
     document.getElementById('logout-button').addEventListener('click', async () => {
